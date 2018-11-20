@@ -20,31 +20,38 @@ def d2(x):
 
 def binary(f):
     l, r = 0, 100
+    cnt = 0
     while True:
+        cnt += 1
         mid = (l + r) / 2
         if f(mid) * f(l) <= 0:
             r = mid
         elif f(mid) * f(r) <= 0:
             l = mid
-        tmp = (l + r) / 2
-        if (math.fabs(tmp - mid) <= eps):
+        if (math.fabs(l - r) <= eps):
             print("x = ", mid)
+            print("cnt = ", cnt)
             break
 
 
 def newton(f, d):
     x = 0
+    cnt = 0 
     while True:
+        cnt += 1
         new_x = x - f(x) / d(x)
         if (math.fabs(x - new_x) <= eps):
             print("x = ", x)
+            print("cnt = ", cnt)
             break
         x = new_x
 
 
 def newton_downhill(f, d):
     x = 0
+    cnt = 0
     while True:
+        cnt += 1
         k = 1
         new_x = x - k * f(x) / d(x)
         while math.fabs(f(new_x)) >= math.fabs(f(x)):
@@ -52,6 +59,7 @@ def newton_downhill(f, d):
             new_x = x - k * f(x) / d(x)
         if math.fabs(x - new_x) <= eps:
             print("x = ", x)
+            print("cnt = ", cnt)
             break
         x = new_x
 
@@ -59,10 +67,13 @@ def newton_downhill(f, d):
 def secant(f):
     old_x = 0
     x = 5
+    cnt = 0
     while True:
+        cnt += 1
         new_x = x - f(x) * (x - old_x) / (f(x) - f(old_x))
         if math.fabs(x - new_x) <= eps:
             print("x = ", x)
+            print("cnt = ", cnt)
             break
         
         old_x = x
