@@ -2,6 +2,7 @@ import math
 
 eps = 10 ** (-8)
 
+
 def f1(x):
     return x ** 2 - 3 * x + 2 - math.exp(x)
 
@@ -19,8 +20,7 @@ def d2(x):
 
 
 def binary(f):
-    l, r = 0, 100
-    cnt = 0
+    l, r, cnt = 0, 100, 0
     while True:
         cnt += 1
         mid = (l + r) / 2
@@ -29,27 +29,25 @@ def binary(f):
         elif f(mid) * f(r) <= 0:
             l = mid
         if (math.fabs(l - r) <= eps):
-            print("x = ", mid)
-            print("cnt = ", cnt)
+            print('x =', mid)
+            print('cnt =', cnt)
             break
 
 
 def newton(f, d):
-    x = 0
-    cnt = 0 
+    x, cnt = 0, 0
     while True:
         cnt += 1
         new_x = x - f(x) / d(x)
         if (math.fabs(x - new_x) <= eps):
-            print("x = ", x)
-            print("cnt = ", cnt)
+            print('x =', x)
+            print('cnt =', cnt)
             break
         x = new_x
 
 
 def newton_downhill(f, d):
-    x = 0
-    cnt = 0
+    x, cnt = 0, 0
     while True:
         cnt += 1
         k = 1
@@ -58,59 +56,53 @@ def newton_downhill(f, d):
             k /= 2
             new_x = x - k * f(x) / d(x)
         if math.fabs(x - new_x) <= eps:
-            print("x = ", x)
-            print("cnt = ", cnt)
+            print('x =', x)
+            print('cnt =', cnt)
             break
         x = new_x
 
 
 def secant(f):
-    old_x = 0
-    x = 5
-    cnt = 0
+    old_x, x, cnt = 0, 5, 0
     while True:
         cnt += 1
         new_x = x - f(x) * (x - old_x) / (f(x) - f(old_x))
         if math.fabs(x - new_x) <= eps:
-            print("x = ", x)
-            print("cnt = ", cnt)
+            print('x =', x)
+            print('cnt =', cnt)
             break
-        
-        old_x = x
+        old_x, x = x, new_x
         x = new_x
 
 
 def main():
-    print("二分法")
-    print("Function1")        
-    binary(f1)   
-    print("Function2")
+    print('二分法')
+    print('Function1')
+    binary(f1)
+    print('Function2')
     binary(f2)
 
-    print("--------------------")
-
-    print("牛顿法")
-    print("Function1")
+    print('--------------------')
+    print('牛顿法')
+    print('Function1')
     newton(f1, d1)
-    print("Function2")
+    print('Function2')
     newton(f2, d2)
 
-
-    print("--------------------")
-
-    print("牛顿下山法")
-    print("Function1")
+    print('--------------------')
+    print('牛顿下山法')
+    print('Function1')
     newton_downhill(f1, d1)
-    print("Function2")
+    print('Function2')
     newton_downhill(f2, d2)
 
-    print("--------------------")
-    print("弦截法")
-    print("Function1")
+    print('--------------------')
+    print('弦截法')
+    print('Function1')
     secant(f1)
-    print("Function2")
+    print('Function2')
     secant(f2)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
