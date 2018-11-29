@@ -8,38 +8,38 @@ set_printoptions(suppress=True, precision=6)
 
 # 生成方程组
 def get_equation_set_2(n):
-    a = eye(n)
+    A = eye(n)
     b = zeros(n)
     for i in range(n):
         for j in range(n):
-            a[i, j] = 1 / (i + j + 1)
-            b[i] += a[i][j]
-    return a, b
+            A[i, j] = 1 / (i + j + 1)
+            b[i] += A[i][j]
+    return A, b
 
 
 # 列主元高斯消去
-def pivot_gauss(a, b):
-    a, b = a.copy(), b.copy()
+def pivot_gauss(A, b):
+    A, b = A.copy(), b.copy()
     n = len(b)
     for i in range(0, n - 1):
         for j in range(i + 1, n):
-            if a[j, i] > a[i, i]:
-                a[[i, j], :] = a[[j, i], :]
+            if A[j, i] > A[i, i]:
+                A[[i, j], :] = A[[j, i], :]
                 b[[i, j]] = b[[j, i]]
-            if a[j, i] != 0.0:
-                m = a[j, i] / a[i, i]
-                a[j, i:n] = a[j, i:n] - m * a[i, i:n]
+            if A[j, i] != 0.0:
+                m = A[j, i] / A[i, i]
+                A[j, i:n] = A[j, i:n] - m * A[i, i:n]
                 b[j] = b[j] - m * b[i]
     for k in range(n - 1, -1, -1):
-        b[k] = (b[k] - dot(a[k, (k + 1):n], b[(k + 1):n])) / a[k, k]
+        b[k] = (b[k] - dot(A[k, (k + 1):n], b[(k + 1):n])) / A[k, k]
 
     x = b
     return x
 
 
 # LU分解法——Doolittle分解
-def lu_decomposition_doolittle(a, b):
-    a, b = a.copy(), b.copy()
+def lu_decomposition_doolittle(A, b):
+    A, b = A.copy(), b.copy()
     n = len(b)
     l = eye(n)
     u = zeros((n, n))
@@ -48,12 +48,12 @@ def lu_decomposition_doolittle(a, b):
             sum = 0
             for t in range(0, k):
                 sum += l[k, t] * u[t, j]
-            u[k, j] = a[k, j] - sum
+            u[k, j] = A[k, j] - sum
         for i in range(k + 1, n):
             sum = 0
             for t in range(0, k):
                 sum += l[i, t] * u[t, k]
-            l[i, k] = (a[i, k] - sum) / u[k, k]
+            l[i, k] = (A[i, k] - sum) / u[k, k]
 
     y = zeros(n)
     for i in range(n):
@@ -73,8 +73,8 @@ def lu_decomposition_doolittle(a, b):
 
 
 # 雅克比迭代法
-def jacobi(a, b):
-    a, b = a.copy(), b.copy()
+def jacobi(A, b):
+    A, b = A.copy(), b.copy()
     n = len(b)
 
     x = random.rand(n)
@@ -85,8 +85,8 @@ def jacobi(a, b):
             sum = 0
             for j in range(0, n):
                 if j != i:
-                    sum += a[i, j] * x[j]
-            x[i] = (b[i] - sum) / a[i, i]
+                    sum += A[i, j] * x[j]
+            x[i] = (b[i] - sum) / A[i, i]
         cnt += 1
         if linalg.norm(x - y) <= eps:
             break
@@ -95,8 +95,8 @@ def jacobi(a, b):
 
 
 # SOR
-def successive_over_relaxation(a, b, w):
-    a, b = a.copy(), b.copy()
+def successive_over_relaxation(A, b, w):
+    A, b = A.copy(), b.copy()
     n = len(b)
 
     x = random.rand(n)
@@ -107,8 +107,8 @@ def successive_over_relaxation(a, b, w):
             sum = 0
             for j in range(n):
                 if j != i:
-                    sum += a[i][j] * x[j]
-            x[i] = (1 - w) * x[i] + w * (b[i] - sum) / a[i, i]
+                    sum += A[i][j] * x[j]
+            x[i] = (1 - w) * x[i] + w * (b[i] - sum) / A[i, i]
         cnt += 1
         if linalg.norm(x - y) <= eps:
             break
@@ -117,20 +117,20 @@ def successive_over_relaxation(a, b, w):
 
 
 # 共轭梯度法
-def conjugate_gradient(a, b):
-    a, b = a.copy(), b.copy()
+def conjugate_gradient(A, b):
+    A, b = A.copy(), b.copy()
     n = len(b)
 
     x = random.rand(n)
-    r = b - dot(a, x)
+    r = b - dot(A, x)
     p = r
     cnt = 1
     while True:
         y = x
-        alpha = dot(r.T, r) / dot(dot(p.T, a), p)
+        alpha = dot(r.T, r) / dot(dot(p.T, A), p)
         x = x + dot(alpha, p)
         new_r = r
-        r = r - dot(dot(alpha, a), p)
+        r = r - dot(dot(alpha, A), p)
         beta = dot(r.T, r) / dot(new_r.T, new_r)
         p = r + dot(beta, p)
         cnt += 1
@@ -145,16 +145,20 @@ def main():
     目前使用迭代法计算方程组1时不收敛
     以后会进行修改
     """
-    a1 = array([[10, -7, 0, 1], [-3, 2.099999, 6, 2],
+    A1 = array([[10, -7, 0, 1], [-3, 2.099999, 6, 2],
                 [5, -1, 5, -1], [2, 1, 0, 2]])
     b1 = array([8, 5.900001, 5, 1])
+    # A1[[0, 2], :] = A1[[2, 0], :]
+    # b1[0], b1[2] = b1[2], b1[0]
+    # A1[[1, 2], :] = A1[[2, 1], :]
+    # b1[1], b1[2] = b1[2], b1[1]
 
-    a2, b2 = get_equation_set_2(4)
+    A2, b2 = get_equation_set_2(4)
 
     print('Pivot Gauss')
     t = time.time()
-    x1 = pivot_gauss(a1, b1)
-    x2 = pivot_gauss(a2, b2)
+    x1 = pivot_gauss(A1, b1)
+    x2 = pivot_gauss(A2, b2)
     t = (time.time() - t) * 1000
     print('x1 =', around(x1, 4))
     print('x2 =', x2)
@@ -163,8 +167,8 @@ def main():
 
     print('LU Decomposition——Doolittle')
     t = time.time()
-    x1 = lu_decomposition_doolittle(a1, b1)
-    x2 = lu_decomposition_doolittle(a2, b2)
+    x1 = lu_decomposition_doolittle(A1, b1)
+    x2 = lu_decomposition_doolittle(A2, b2)
     t = (time.time() - t) * 1000
     print('x1 =', x1)
     print('x2 =', x2)
@@ -173,8 +177,8 @@ def main():
 
     print('Jacobi')
     t = time.time()
-    # x1, cnt1 = jacobi(a1, b1)
-    x2, cnt2 = jacobi(a2, b2)
+    # x1, cnt1 = jacobi(A1, b1)
+    x2, cnt2 = jacobi(A2, b2)
     t = (time.time() - t) * 1000
     # print('x1 =', x1)
     # print('cnt1 =', cnt1)
@@ -188,7 +192,7 @@ def main():
     for w in W:
         print('w =', w)
         t = time.time()
-        x2, cnt2 = successive_over_relaxation(a2, b2, 1.0)
+        x2, cnt2 = successive_over_relaxation(A2, b2, w)
         t = (time.time() - t) * 1000
         print('x2 =', x2)
         print('cnt2 =', cnt2)
@@ -197,8 +201,8 @@ def main():
 
     print('Conjugate Gradient')
     t = time.time()
-    # x1, cnt1 = conjugate_gradient(a1, b1)
-    x2, cnt2 = conjugate_gradient(a2, b2)
+    # x1, cnt1 = conjugate_gradient(A1, b1)
+    x2, cnt2 = conjugate_gradient(A2, b2)
     t = (time.time() - t) * 1000
     # print('x1 =', x1)
     # print('cnt1 =', cnt1)
