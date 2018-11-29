@@ -67,11 +67,7 @@ def jacobi(a, b):
     a, b = a.copy(), b.copy()
     n = len(b)
 
-    """
-    目前在计算方程组1的时候会导致不收敛,
-    稍后添加一个判是否收敛
-    """
-    x = array([0.0, -0.0, 0.0, 1.0])
+    x = random.rand(n)
     cnt = 0
     while True:
         y = x.copy()
@@ -84,15 +80,30 @@ def jacobi(a, b):
         cnt += 1
         if linalg.norm(x - y) <= eps:
             break
-    
+
     return x, cnt
 
 
+# SOR
 def successive_over_relaxation(a, b, w):
     a, b = a.copy(), b.copy()
     n = len(b)
 
+    x = random.rand(n)
+    cnt = 0
+    while True:
+        y = x.copy()
+        for i in range(n):
+            sum = 0
+            for j in range(n):
+                if j != i:
+                    sum += a[i][j] * x[j]
+            x[i] = (1 - w) * x[i] + w * (b[i] - sum) / a[i, i]
+        cnt += 1
+        if linalg.norm(x - y) <= eps:
+            break
 
+    return x, cnt
 
 
 # 生成方程组
@@ -107,6 +118,10 @@ def get_equation_set_2(n):
 
 
 def main():
+    """
+    目前在计算方程组1的时候会导致不收敛,
+    稍后添加一个判是否收敛
+    """
     a1 = array([[10, -7, 0, 1], [-3, 2.099999, 6, 2],
                 [5, -1, 5, -1], [2, 1, 0, 2]])
     b1 = array([8, 5.900001, 5, 1])
@@ -142,6 +157,18 @@ def main():
     # print('cnt1 =', cnt1)
     print('x2 =', x2)
     print('cnt2 =', cnt2)
+    print('Time:' + str(t) + 'ms')
+    print('--------------------')
+
+    print('Successive Over Relaxation(SOR)')
+    W = [1.0, 1.25, 1.5]
+    t = time.time()
+    for w in W:
+        print('w =', w)
+        x2, cnt2 = successive_over_relaxation(a2, b2, 1.0)
+        print('x2 =', x2)
+        print('cnt2 =', cnt2)
+    t = (time.time() - t) * 1000
     print('Time:' + str(t) + 'ms')
     print('--------------------')
 
