@@ -1,6 +1,6 @@
 import math
 
-eps = 10 ** (-8)
+eps = 1e-8
 
 
 def f1(x):
