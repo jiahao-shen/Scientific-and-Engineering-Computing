@@ -28,7 +28,7 @@ def binary(f):
             r = mid
         elif f(mid) * f(r) <= 0:
             l = mid
-        if (math.fabs(l - r) <= eps):
+        if math.fabs(l - r) <= eps:
             print('x =', mid)
             print('cnt =', cnt)
             break
@@ -39,7 +39,7 @@ def newton(f, d):
     while True:
         cnt += 1
         new_x = x - f(x) / d(x)
-        if (math.fabs(x - new_x) <= eps):
+        if math.fabs(x - new_x) <= eps:
             print('x =', x)
             print('cnt =', cnt)
             break

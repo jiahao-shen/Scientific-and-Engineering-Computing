@@ -6,9 +6,9 @@ set_printoptions(suppress=True, precision=6)
 
 
 def get_equation_set_2(n):
-    """
-    input: int n
-    return: matrix A, b
+    """Get equation 2
+    :param n: int
+    :return: matrix A, b
     """
     A = eye(n)
     b = zeros(n)
@@ -20,13 +20,13 @@ def get_equation_set_2(n):
 
 
 def pivot_gauss(A, b):
-    """
-    Pivot Gauss Method
-    input: matrix A, vector b
-    return: vector x
+    """Pivot Gauss Method
+    :param A: matrix
+    :param b: vector
+    :return: vector x
     """
     A, b = A.copy(), b.copy()
-    n = len(b)
+    n = len(A)
     for i in range(0, n - 1):
         for j in range(i + 1, n):
             if A[j, i] > A[i, i]:
@@ -44,13 +44,13 @@ def pivot_gauss(A, b):
 
 
 def lu_decomposition_doolittle(A, b):
-    """
-    LU——Doolittle Method
-    input: matrix A, vector b
-    return: vector x
+    """LU——Doolittle Method
+    :param A: matrix
+    :param b: vector
+    :return: vector x
     """
     A, b = A.copy(), b.copy()
-    n = len(b)
+    n = len(A)
     l = eye(n)
     u = zeros((n, n))
     for k in range(n):
@@ -82,16 +82,44 @@ def lu_decomposition_doolittle(A, b):
     return x
 
 
-def jacobi(A, b, x0):
+def check_jacobi_convergency(A):
     """
-    Jacobi Method
-    input: matrix A, vector b, vector x0
-    return: vector x, int cnt(iterations)
+    :param A: matrix
+    :return: True or False
+    """
+    n = len(A)
+    D = eye(n)
+    R = A.copy()
+    for i in range(n):
+        D[i, i] = A[i, i]
+        R[i, i] = 0
+    B = dot(linalg.inv(D), R)
+
+    eigenvalues = linalg.eigvals(B)
+    spectral_radius = linalg.norm(eigenvalues, ord=inf)
+    if spectral_radius > 1:
+        return False
+    else:
+        return True
+
+
+
+def jacobi(A, b, x0):
+    """Jacobi Method
+    :param A: matrix
+    :param b: vector
+    :param x0: vector
+    :return: vector x, iterations cnt
     """
     A, b = A.copy(), b.copy()
-    n = len(b)
 
-    x = x0
+    if not check_jacobi_convergency(A):
+        print("Spectral radius > 1, not convergency")
+        return NaN, NaN
+
+    n = len(A)
+
+    x = x0.copy()
     cnt = 0
     while True:
         y = x.copy()
@@ -99,7 +127,7 @@ def jacobi(A, b, x0):
             s = 0
             for j in range(0, n):
                 if j != i:
-                    s += A[i, j] * x[j]
+                    s += A[i, j] * y[j]
             x[i] = (b[i] - s) / A[i, i]
         cnt += 1
         if linalg.norm(x - y) <= eps:
@@ -109,15 +137,18 @@ def jacobi(A, b, x0):
 
 
 def successive_over_relaxation(A, b, w, x0):
-    """
-    Successive Over Relaxation Method
-    input: matrix A, vector b, float w, vector x0
-    return: vector x, int cnt(iterations)
+    """Successive Over Relaxation Method
+    :param A: matrix
+    :param b: vector
+    :param w: float(0 < w < 2)
+    :param x0: vector
+    :return: vector x, iterations cnt
     """
     A, b = A.copy(), b.copy()
-    n = len(b)
 
-    x = x0
+    n = len(A)
+
+    x = x0.copy()
     cnt = 0
     while True:
         y = x.copy()
@@ -135,36 +166,36 @@ def successive_over_relaxation(A, b, w, x0):
 
 
 def check_symmetric_and_positive_definite_matrix(A):
-    """
-    Check whether A is symmetric and positive definite matrix
-    input: matrix A
-    return: True or False
+    """Check whether matrix A is symmetric and positive definite
+    :param A: matrix
+    :return: True or False
     """
     if not (A.T == A).all():
         return False
 
     values = linalg.eigvals(A)
-    for value in values:
-        if value <= 0:
-            return False
+    if any(values < 0):
+        return False
 
     return True
 
 
 def conjugate_gradient(A, b, x0):
-    """
-    Conjugate Gradient Method
-    input: matrix A, vector b, vector x0
-    return: vector x, int cnt(iterations)
+    """Conjugate Gradient Method
+    :param A: matrix
+    :param b: vector
+    :param x0: vector
+    :return: vector x, iterations cnt
     """
     A, b = A.copy(), b.copy()
 
     if not check_symmetric_and_positive_definite_matrix(A):
-        return None, None
+        print("A must be symmetric and positive definite matrix")
+        return NaN, NaN
 
-    n = len(b)
+    n = len(A)
 
-    x = x0
+    x = x0.copy()
     r = b - dot(A, x)
     p = r
     cnt = 1
@@ -172,9 +203,9 @@ def conjugate_gradient(A, b, x0):
         y = x
         alpha = dot(r.T, r) / dot(dot(p.T, A), p)
         x = x + dot(alpha, p)
-        new_r = r
+        old_r = r
         r = r - dot(dot(alpha, A), p)
-        beta = dot(r.T, r) / dot(new_r.T, new_r)
+        beta = dot(r.T, r) / dot(old_r.T, old_r)
         p = r + dot(beta, p)
         cnt += 1
         if linalg.norm(x - y) <= eps:
@@ -191,10 +222,6 @@ def main():
     A1 = array([[10, -7, 0, 1], [-3, 2.099999, 6, 2],
                 [5, -1, 5, -1], [2, 1, 0, 2]])
     b1 = array([8, 5.900001, 5, 1])
-    # A1[[0, 2], :] = A1[[2, 0], :]
-    # b1[0], b1[2] = b1[2], b1[0]
-    # A1[[1, 2], :] = A1[[2, 1], :]
-    # b1[1], b1[2] = b1[2], b1[1]
 
     A2, b2 = get_equation_set_2(4)
 
@@ -235,12 +262,12 @@ def main():
 
     x0 = random.rand(4)
 
-    # t = time.time()
-    # x1, cnt1 = jacobi(A1, b1)
-    # t = (time.time() - t) * 1000
-    # print('x1 =', x1)
-    # print('cnt1 =', cnt1)
-    # print('Time:' + str(t) + 'ms')
+    t = time.time()
+    x1, cnt1 = jacobi(A1, b1, x0)
+    t = (time.time() - t) * 1000
+    print('x1 =', x1)
+    print('cnt1 =', cnt1)
+    print('Time:' + str(t) + 'ms')
 
     t = time.time()
     x2, cnt2 = jacobi(A2, b2, x0)
@@ -275,9 +302,6 @@ def main():
     t = time.time()
     x1, cnt1 = conjugate_gradient(A1, b1, x0)
     t = (time.time() - t) * 1000
-
-    if x1 is None:
-        print("A must be symmetric and positive definite matrix")
     print('x1 =', x1)
     print('cnt1 =', cnt1)
     print('Time:' + str(t) + 'ms')
@@ -285,9 +309,6 @@ def main():
     t = time.time()
     x2, cnt2 = conjugate_gradient(A2, b2, x0)
     t = (time.time() - t) * 1000
-
-    if x2 is None:
-        print("A must be symmetric and positive definite matrix")
     print('x2 =', x2)
     print('cnt2 =', cnt2)
     print('Time:' + str(t) + 'ms')
