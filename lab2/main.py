@@ -5,11 +5,11 @@ eps = 1e-6
 set_printoptions(suppress=True, precision=6)
 
 
-"""
-input: int n
-return: matrix A, b
-"""
 def get_equation_set_2(n):
+    """
+    input: int n
+    return: matrix A, b
+    """
     A = eye(n)
     b = zeros(n)
     for i in range(n):
@@ -19,12 +19,12 @@ def get_equation_set_2(n):
     return A, b
 
 
-"""
-Pivot Gauss Method
-input: matrix A, vector b
-return: vector x
-"""
 def pivot_gauss(A, b):
+    """
+    Pivot Gauss Method
+    input: matrix A, vector b
+    return: vector x
+    """
     A, b = A.copy(), b.copy()
     n = len(b)
     for i in range(0, n - 1):
@@ -43,12 +43,12 @@ def pivot_gauss(A, b):
     return x
 
 
-"""
-LU——Doolittle Method
-input: matrix A, vector b
-return: vector x
-"""
 def lu_decomposition_doolittle(A, b):
+    """
+    LU——Doolittle Method
+    input: matrix A, vector b
+    return: vector x
+    """
     A, b = A.copy(), b.copy()
     n = len(b)
     l = eye(n)
@@ -82,12 +82,12 @@ def lu_decomposition_doolittle(A, b):
     return x
 
 
-"""
-Jacobi Method
-input: matrix A, vector b, vector x0
-return: vector x, int cnt(iterations)
-"""
 def jacobi(A, b, x0):
+    """
+    Jacobi Method
+    input: matrix A, vector b, vector x0
+    return: vector x, int cnt(iterations)
+    """
     A, b = A.copy(), b.copy()
     n = len(b)
 
@@ -108,12 +108,12 @@ def jacobi(A, b, x0):
     return x, cnt
 
 
-"""
-Successive Over Relaxation Method
-input: matrix A, vector b, float w, vector x0
-return: vector x, int cnt(iterations)
-"""
 def successive_over_relaxation(A, b, w, x0):
+    """
+    Successive Over Relaxation Method
+    input: matrix A, vector b, float w, vector x0
+    return: vector x, int cnt(iterations)
+    """
     A, b = A.copy(), b.copy()
     n = len(b)
 
@@ -134,13 +134,34 @@ def successive_over_relaxation(A, b, w, x0):
     return x, cnt
 
 
-"""
-Conjugate Gradient Method
-input: matrix A, vector b, vector x0
-return: vector x, int cnt(iterations)
-"""
+def check_symmetric_and_positive_definite_matrix(A):
+    """
+    Check whether A is symmetric and positive definite matrix
+    input: matrix A
+    return: True or False
+    """
+    if not (A.T == A).all():
+        return False
+
+    values = linalg.eigvals(A)
+    for value in values:
+        if value <= 0:
+            return False
+
+    return True
+
+
 def conjugate_gradient(A, b, x0):
+    """
+    Conjugate Gradient Method
+    input: matrix A, vector b, vector x0
+    return: vector x, int cnt(iterations)
+    """
     A, b = A.copy(), b.copy()
+
+    if not check_symmetric_and_positive_definite_matrix(A):
+        return None, None
+
     n = len(b)
 
     x = x0
@@ -177,64 +198,101 @@ def main():
 
     A2, b2 = get_equation_set_2(4)
 
+    """---------------------------------------------"""
     print('Pivot Gauss')
+
     t = time.time()
     x1 = pivot_gauss(A1, b1)
-    x2 = pivot_gauss(A2, b2)
-    t = (time.time() - t) * 1000
-    print('x1 =', around(x1, 4))
-    print('x2 =', x2)
-    print('Time:' + str(t) + 'ms')
-    print('--------------------')
-
-    print('LU Decomposition——Doolittle')
-    t = time.time()
-    x1 = lu_decomposition_doolittle(A1, b1)
-    x2 = lu_decomposition_doolittle(A2, b2)
     t = (time.time() - t) * 1000
     print('x1 =', x1)
+    print('Time:' + str(t) + 'ms')
+
+    t = time.time()
+    x2 = pivot_gauss(A2, b2)
+    t = (time.time() - t) * 1000
     print('x2 =', x2)
     print('Time:' + str(t) + 'ms')
-    print('--------------------')
+    print('----------------------------------')
 
-    print('Jacobi')
+    """---------------------------------------------"""
+    print('LU Decomposition——Doolittle')
+
     t = time.time()
-    # x1, cnt1 = jacobi(A1, b1)
-    x0 = random.rand(4)
-    x2, cnt2 = jacobi(A2, b2, x0)
+    x1 = lu_decomposition_doolittle(A1, b1)
     t = (time.time() - t) * 1000
+    print('x1 =', x1)
+    print('Time:' + str(t) + 'ms')
+
+    t = time.time()
+    x2 = lu_decomposition_doolittle(A2, b2)
+    t = (time.time() - t) * 1000
+    print('x2 =', x2)
+    print('Time:' + str(t) + 'ms')
+    print('----------------------------------')
+
+    """---------------------------------------------"""
+    print('Jacobi')
+
+    x0 = random.rand(4)
+
+    # t = time.time()
+    # x1, cnt1 = jacobi(A1, b1)
+    # t = (time.time() - t) * 1000
     # print('x1 =', x1)
     # print('cnt1 =', cnt1)
+    # print('Time:' + str(t) + 'ms')
+
+    t = time.time()
+    x2, cnt2 = jacobi(A2, b2, x0)
+    t = (time.time() - t) * 1000
     print('x2 =', x2)
     print('cnt2 =', cnt2)
     print('Time:' + str(t) + 'ms')
-    print('--------------------')
+    print('----------------------------------')
 
+    """---------------------------------------------"""
     print('Successive Over Relaxation(SOR)')
+
     W = [1.0, 1.25, 1.5]
+
+    x0 = random.rand(4)
+
     for w in W:
         print('w =', w)
         t = time.time()
-        x0 = random.rand(4)
         x2, cnt2 = successive_over_relaxation(A2, b2, w, x0)
         t = (time.time() - t) * 1000
         print('x2 =', x2)
         print('cnt2 =', cnt2)
         print('Time:' + str(t) + 'ms')
-    print('--------------------')
+    print('----------------------------------')
 
+    """---------------------------------------------"""
     print('Conjugate Gradient')
-    t = time.time()
-    # x1, cnt1 = conjugate_gradient(A1, b1)
+
     x0 = random.rand(4)
+
+    t = time.time()
+    x1, cnt1 = conjugate_gradient(A1, b1, x0)
+    t = (time.time() - t) * 1000
+
+    if x1 is None:
+        print("A must be symmetric and positive definite matrix")
+    print('x1 =', x1)
+    print('cnt1 =', cnt1)
+    print('Time:' + str(t) + 'ms')
+
+    t = time.time()
     x2, cnt2 = conjugate_gradient(A2, b2, x0)
     t = (time.time() - t) * 1000
-    # print('x1 =', x1)
-    # print('cnt1 =', cnt1)
+
+    if x2 is None:
+        print("A must be symmetric and positive definite matrix")
     print('x2 =', x2)
     print('cnt2 =', cnt2)
     print('Time:' + str(t) + 'ms')
-    print('--------------------')
+
+    print('----------------------------------')
 
 
 if __name__ == '__main__':
