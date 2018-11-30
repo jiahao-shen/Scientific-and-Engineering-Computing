@@ -1,12 +1,14 @@
 from numpy import *
 import time
 
-
 eps = 1e-6
 set_printoptions(suppress=True, precision=6)
 
 
-# 生成方程组
+"""
+input: int n
+return: matrix A, b
+"""
 def get_equation_set_2(n):
     A = eye(n)
     b = zeros(n)
@@ -17,7 +19,11 @@ def get_equation_set_2(n):
     return A, b
 
 
-# 列主元高斯消去
+"""
+Pivot Gauss Method
+input: matrix A, vector b
+return: vector x
+"""
 def pivot_gauss(A, b):
     A, b = A.copy(), b.copy()
     n = len(b)
@@ -37,7 +43,11 @@ def pivot_gauss(A, b):
     return x
 
 
-# LU分解法——Doolittle分解
+"""
+LU——Doolittle Method
+input: matrix A, vector b
+return: vector x
+"""
 def lu_decomposition_doolittle(A, b):
     A, b = A.copy(), b.copy()
     n = len(b)
@@ -45,48 +55,52 @@ def lu_decomposition_doolittle(A, b):
     u = zeros((n, n))
     for k in range(n):
         for j in range(k, n):
-            sum = 0
+            s = 0
             for t in range(0, k):
-                sum += l[k, t] * u[t, j]
-            u[k, j] = A[k, j] - sum
+                s += l[k, t] * u[t, j]
+            u[k, j] = A[k, j] - s
         for i in range(k + 1, n):
-            sum = 0
+            s = 0
             for t in range(0, k):
-                sum += l[i, t] * u[t, k]
-            l[i, k] = (A[i, k] - sum) / u[k, k]
+                s += l[i, t] * u[t, k]
+            l[i, k] = (A[i, k] - s) / u[k, k]
 
     y = zeros(n)
     for i in range(n):
-        sum = 0
+        s = 0
         for j in range(0, i):
-            sum += l[i, j] * y[j]
-        y[i] = b[i] - sum
+            s += l[i, j] * y[j]
+        y[i] = b[i] - s
 
     x = zeros(n)
     for i in reversed(range(n)):
-        sum = 0
+        s = 0
         for j in range(i + 1, n):
-            sum += u[i, j] * x[j]
-        x[i] = (y[i] - sum) / u[i, i]
+            s += u[i, j] * x[j]
+        x[i] = (y[i] - s) / u[i, i]
 
     return x
 
 
-# 雅克比迭代法
-def jacobi(A, b):
+"""
+Jacobi Method
+input: matrix A, vector b, vector x0
+return: vector x, int cnt(iterations)
+"""
+def jacobi(A, b, x0):
     A, b = A.copy(), b.copy()
     n = len(b)
 
-    x = random.rand(n)
+    x = x0
     cnt = 0
     while True:
         y = x.copy()
         for i in range(n):
-            sum = 0
+            s = 0
             for j in range(0, n):
                 if j != i:
-                    sum += A[i, j] * x[j]
-            x[i] = (b[i] - sum) / A[i, i]
+                    s += A[i, j] * x[j]
+            x[i] = (b[i] - s) / A[i, i]
         cnt += 1
         if linalg.norm(x - y) <= eps:
             break
@@ -94,21 +108,25 @@ def jacobi(A, b):
     return x, cnt
 
 
-# SOR
-def successive_over_relaxation(A, b, w):
+"""
+Successive Over Relaxation Method
+input: matrix A, vector b, float w, vector x0
+return: vector x, int cnt(iterations)
+"""
+def successive_over_relaxation(A, b, w, x0):
     A, b = A.copy(), b.copy()
     n = len(b)
 
-    x = random.rand(n)
+    x = x0
     cnt = 0
     while True:
         y = x.copy()
         for i in range(n):
-            sum = 0
+            s = 0
             for j in range(n):
                 if j != i:
-                    sum += A[i][j] * x[j]
-            x[i] = (1 - w) * x[i] + w * (b[i] - sum) / A[i, i]
+                    s += A[i][j] * x[j]
+            x[i] = (1 - w) * x[i] + w * (b[i] - s) / A[i, i]
         cnt += 1
         if linalg.norm(x - y) <= eps:
             break
@@ -116,12 +134,16 @@ def successive_over_relaxation(A, b, w):
     return x, cnt
 
 
-# 共轭梯度法
-def conjugate_gradient(A, b):
+"""
+Conjugate Gradient Method
+input: matrix A, vector b, vector x0
+return: vector x, int cnt(iterations)
+"""
+def conjugate_gradient(A, b, x0):
     A, b = A.copy(), b.copy()
     n = len(b)
 
-    x = random.rand(n)
+    x = x0
     r = b - dot(A, x)
     p = r
     cnt = 1
@@ -178,7 +200,8 @@ def main():
     print('Jacobi')
     t = time.time()
     # x1, cnt1 = jacobi(A1, b1)
-    x2, cnt2 = jacobi(A2, b2)
+    x0 = random.rand(4)
+    x2, cnt2 = jacobi(A2, b2, x0)
     t = (time.time() - t) * 1000
     # print('x1 =', x1)
     # print('cnt1 =', cnt1)
@@ -192,7 +215,8 @@ def main():
     for w in W:
         print('w =', w)
         t = time.time()
-        x2, cnt2 = successive_over_relaxation(A2, b2, w)
+        x0 = random.rand(4)
+        x2, cnt2 = successive_over_relaxation(A2, b2, w, x0)
         t = (time.time() - t) * 1000
         print('x2 =', x2)
         print('cnt2 =', cnt2)
@@ -202,7 +226,8 @@ def main():
     print('Conjugate Gradient')
     t = time.time()
     # x1, cnt1 = conjugate_gradient(A1, b1)
-    x2, cnt2 = conjugate_gradient(A2, b2)
+    x0 = random.rand(4)
+    x2, cnt2 = conjugate_gradient(A2, b2, x0)
     t = (time.time() - t) * 1000
     # print('x1 =', x1)
     # print('cnt1 =', cnt1)
@@ -210,7 +235,6 @@ def main():
     print('cnt2 =', cnt2)
     print('Time:' + str(t) + 'ms')
     print('--------------------')
-    
 
 
 if __name__ == '__main__':

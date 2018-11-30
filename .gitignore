@@ -4,3 +4,5 @@ test.py
 .DS_Store
 tempCodeRunnerFile.py
 __pycache__
+.history
+.idea/
