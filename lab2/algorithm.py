@@ -50,33 +50,77 @@ def lu_decomposition_doolittle(A, b):
     """
     A, b = A.copy(), b.copy()
     n = len(A)
-    l = eye(n)
-    u = zeros((n, n))
+    L = eye(n)
+    U = zeros((n, n))
     for k in range(n):
         for j in range(k, n):
             s = 0
             for t in range(0, k):
-                s += l[k, t] * u[t, j]
-            u[k, j] = A[k, j] - s
+                s += L[k, t] * U[t, j]
+            U[k, j] = A[k, j] - s
         for i in range(k + 1, n):
             s = 0
             for t in range(0, k):
-                s += l[i, t] * u[t, k]
-            l[i, k] = (A[i, k] - s) / u[k, k]
+                s += L[i, t] * U[t, k]
+            L[i, k] = (A[i, k] - s) / U[k, k]
 
     y = zeros(n)
     for i in range(n):
         s = 0
         for j in range(0, i):
-            s += l[i, j] * y[j]
+            s += L[i, j] * y[j]
         y[i] = b[i] - s
 
     x = zeros(n)
     for i in reversed(range(n)):
         s = 0
         for j in range(i + 1, n):
-            s += u[i, j] * x[j]
-        x[i] = (y[i] - s) / u[i, i]
+            s += U[i, j] * x[j]
+        x[i] = (y[i] - s) / U[i, i]
+
+    return x
+
+
+def lu_decomposition_cholesky(A, b):
+    """LU——Cholesky Method
+    :param A: matrix
+    :param b: vector
+    :return: vector x
+    """
+    A, b = A.copy(), b.copy()
+
+    if not check_symmetric_and_positive_definite_matrix(A):
+        return NaN
+
+    n = len(A)
+    L = eye(n)
+
+    for j in range(n):
+        s = 0
+        for k in range(j):
+            s += L[j, k] ** 2
+        L[j, j] = sqrt(A[j, j] - s)
+
+        for i in range(j + 1, n):
+            s = 0
+            for k in range(j):
+                s += L[i, k] * L[j, k]
+            L[i, j] = (A[i, j] - s) / L[j, j]
+
+    y = zeros(n)
+
+    for i in range(n):
+        s = 0
+        for j in range(0, i):
+            s += L[i, j] * y[j]
+        y[i] = (b[i] - s) / L[i, i]
+
+    x = zeros(n)
+    for i in reversed(range(n)):
+        s = 0
+        for j in range(i + 1, n):
+            s += L[j, i] * x[j]
+        x[i] = (y[i] - s) / L[i, i]
 
     return x
 
@@ -293,10 +337,22 @@ def test():
     """Just test
     :return:
     """
+    A = array([[1, 1, 2],
+               [1, 2, 0],
+               [2, 0, 11]])
+    b = array([5, 8, 7])
+    x = lu_decomposition_cholesky(A, b)
+    print(x)
+    x = lu_decomposition_doolittle(A, b)
+    print(x)
+
     A = array([[2, -1, 0],
                [-1, 3, -1],
                [0, -1, 2]])
     b = array([1, 8, -5])
+
+    x = lu_decomposition_doolittle(A, b)
+    print(x)
 
     x0 = array([-0.5, 2.6667, -2.5000])
     x, cnt = jacobi(A, b, x0)
@@ -342,9 +398,7 @@ def test():
     A = array([[10, -7, 0, 1], [-3, 2.099999, 6, 2],
                [5, -1, 5, -1], [2, 1, 0, 2]])
     b = array([8, 5.900001, 5, 1])
-    x0 = random.rand(4)
-    print(successive_over_relaxation(A, b, 1.2, x0))
-
+    print(check_successive_over_relaxation_convergency(A, 1.0))
 
 if __name__ == '__main__':
     test()
