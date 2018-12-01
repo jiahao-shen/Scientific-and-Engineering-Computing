@@ -1,4 +1,4 @@
-from lab2.algorithm import *
+from algorithm import *
 import time
 
 
