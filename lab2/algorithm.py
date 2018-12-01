@@ -1,3 +1,11 @@
+"""
+@project: Scientific-and-Engineering-Computing
+@author: sam
+@file algorithm.py
+@ide: PyCharm
+@time: 2018-12-01 01:41:19
+@blog: https://jiahaoplus.com
+"""
 from numpy import *
 
 eps = 1e-6

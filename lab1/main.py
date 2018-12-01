@@ -1,3 +1,11 @@
+"""
+@project: Scientific-and-Engineering-Computing
+@author: sam
+@file main.py
+@ide: PyCharm
+@time: 2018-11-20 00:00:00
+@blog: https://jiahaoplus.com
+"""
 import math
 
 eps = 1e-8
@@ -19,7 +27,11 @@ def d2(x):
     return 3 * x ** 2 - 1
 
 
-def binary(f):
+def bisection(f):
+    """Bisection Method
+    :param f: f(x)
+    :return:
+    """
     l, r, cnt = 0, 100, 0
     while True:
         cnt += 1
@@ -35,6 +47,11 @@ def binary(f):
 
 
 def newton(f, d):
+    """Newton Method
+    :param f: f(x)
+    :param d: f'(x)
+    :return:
+    """
     x, cnt = 0, 0
     while True:
         cnt += 1
@@ -47,6 +64,11 @@ def newton(f, d):
 
 
 def newton_downhill(f, d):
+    """Newton Downhill Method
+    :param f: f(x)
+    :param d: d(x)
+    :return:
+    """
     x, cnt = 0, 0
     while True:
         cnt += 1
@@ -63,6 +85,10 @@ def newton_downhill(f, d):
 
 
 def secant(f):
+    """Secant Method
+    :param f: f(x)
+    :return:
+    """
     old_x, x, cnt = 0, 5, 0
     while True:
         cnt += 1
@@ -76,28 +102,28 @@ def secant(f):
 
 
 def main():
-    print('二分法')
+    print('Bisection Method')
     print('Function1')
-    binary(f1)
+    bisection(f1)
     print('Function2')
-    binary(f2)
+    bisection(f2)
 
     print('--------------------')
-    print('牛顿法')
+    print('Newton Method')
     print('Function1')
     newton(f1, d1)
     print('Function2')
     newton(f2, d2)
 
     print('--------------------')
-    print('牛顿下山法')
+    print('Newton Downhill Method')
     print('Function1')
     newton_downhill(f1, d1)
     print('Function2')
     newton_downhill(f2, d2)
 
     print('--------------------')
-    print('弦截法')
+    print('Secant Method')
     print('Function1')
     secant(f1)
     print('Function2')

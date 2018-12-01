@@ -1,3 +1,11 @@
+"""
+@project: Scientific-and-Engineering-Computing
+@author: sam
+@file main.py
+@ide: PyCharm
+@time: 2018-11-30 01:41:19
+@blog: https://jiahaoplus.com
+"""
 from algorithm import *
 import time
 
