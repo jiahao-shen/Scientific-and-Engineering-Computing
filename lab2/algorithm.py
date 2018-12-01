@@ -342,28 +342,34 @@ def test():
                [2, 0, 11]])
     b = array([5, 8, 7])
     x = lu_decomposition_cholesky(A, b)
+    # [-2, 5, 1]
     print(x)
+
     x = lu_decomposition_doolittle(A, b)
+    # [-2, 5, 1]
     print(x)
 
     A = array([[2, -1, 0],
                [-1, 3, -1],
                [0, -1, 2]])
     b = array([1, 8, -5])
-
     x = lu_decomposition_doolittle(A, b)
+    # [2, 3, -1]
     print(x)
 
     x0 = array([-0.5, 2.6667, -2.5000])
     x, cnt = jacobi(A, b, x0)
+    # [2, 3, -1]
     print(x, cnt)
 
     x0 = array([0.5, 2.8333, -1.0833])
     x, cnt = gauss_seidel(A, b, x0)
+    # [2, 3, -1]
     print(x, cnt)
 
     x0 = array([0.55, 3.1350, -1.0257])
     x, cnt = successive_over_relaxation(A, b, 1.1, x0)
+    # [2, 3, -1]
     print(x, cnt)
 
     A = array([[0.76, -0.01, -0.14, -0.16],
@@ -373,12 +379,16 @@ def test():
     b = array([0.68, 1.18, 0.12, 0.74])
     x0 = array([0.0, 0, 0, 0])
     x, cnt = successive_over_relaxation(A, b, 1.05, x0)
+    # [1.271497 1.284355 0.485795 1.284269] 7
     print(x, cnt)
 
     A = array([[2, -1, 1],
                [1, 1, 1],
                [1, 1, -2]])
+    # Spectral radius >= 1, not convergency
+    # False
     print(check_jacobi_convergency(A))
+    # True
     print(check_gauss_seidel_convergency(A))
 
     A = array([[31.0, -13, 0, 0, 0, -10, 0, 0, 0],
@@ -393,12 +403,17 @@ def test():
     b = array([-15, 27, -23, 0, -20, 12, -7, 7, 10])
     x0 = random.rand(9)
     x, cnt = jacobi(A, b, x0)
+    # [-0.289233  0.345436 - 0.712811 - 0.220608 - 0.4304    0.154309 - 0.057822 0.201054  0.290229]
+    # 42
     print(x, cnt)
 
     A = array([[10, -7, 0, 1], [-3, 2.099999, 6, 2],
                [5, -1, 5, -1], [2, 1, 0, 2]])
     b = array([8, 5.900001, 5, 1])
+    # Spectral radius >= 1, not convergency
+    # False
     print(check_successive_over_relaxation_convergency(A, 1.0))
+
 
 if __name__ == '__main__':
     test()
