@@ -6,10 +6,10 @@
 @time: 2018-12-01 01:41:19
 @blog: https://jiahaoplus.com
 """
-from numpy import *
+import numpy as np
 
 eps = 1e-6
-set_printoptions(suppress=True, precision=6)
+np.set_printoptions(suppress=True, precision=6)
 
 
 def get_equation_set_2(n):
@@ -17,8 +17,8 @@ def get_equation_set_2(n):
     :param n: int
     :return: matrix A, b
     """
-    A = eye(n)
-    b = zeros(n)
+    A = np.eye(n)
+    b = np.zeros(n)
     for i in range(n):
         for j in range(n):
             A[i, j] = 1 / (i + j + 1)
@@ -44,7 +44,7 @@ def pivot_gauss(A, b):
                 A[j, i:n] = A[j, i:n] - m * A[i, i:n]
                 b[j] = b[j] - m * b[i]
     for k in range(n - 1, -1, -1):
-        b[k] = (b[k] - dot(A[k, (k + 1):n], b[(k + 1):n])) / A[k, k]
+        b[k] = (b[k] - np.dot(A[k, (k + 1):n], b[(k + 1):n])) / A[k, k]
 
     x = b
     return x
@@ -58,8 +58,8 @@ def lu_decomposition_doolittle(A, b):
     """
     A, b = A.copy(), b.copy()
     n = len(A)
-    L = eye(n)
-    U = zeros((n, n))
+    L = np.eye(n)
+    U = np.zeros((n, n))
     for k in range(n):
         for j in range(k, n):
             s = 0
@@ -72,14 +72,14 @@ def lu_decomposition_doolittle(A, b):
                 s += L[i, t] * U[t, k]
             L[i, k] = (A[i, k] - s) / U[k, k]
 
-    y = zeros(n)
+    y = np.zeros(n)
     for i in range(n):
         s = 0
         for j in range(0, i):
             s += L[i, j] * y[j]
         y[i] = b[i] - s
 
-    x = zeros(n)
+    x = np.zeros(n)
     for i in reversed(range(n)):
         s = 0
         for j in range(i + 1, n):
@@ -98,16 +98,16 @@ def lu_decomposition_cholesky(A, b):
     A, b = A.copy(), b.copy()
 
     if not check_symmetric_and_positive_definite_matrix(A):
-        return NaN
+        return np.NaN
 
     n = len(A)
-    L = eye(n)
+    L = np.eye(n)
 
     for j in range(n):
         s = 0
         for k in range(j):
             s += L[j, k] ** 2
-        L[j, j] = sqrt(A[j, j] - s)
+        L[j, j] = np.sqrt(A[j, j] - s)
 
         for i in range(j + 1, n):
             s = 0
@@ -115,7 +115,7 @@ def lu_decomposition_cholesky(A, b):
                 s += L[i, k] * L[j, k]
             L[i, j] = (A[i, j] - s) / L[j, j]
 
-    y = zeros(n)
+    y = np.zeros(n)
 
     for i in range(n):
         s = 0
@@ -123,7 +123,7 @@ def lu_decomposition_cholesky(A, b):
             s += L[i, j] * y[j]
         y[i] = (b[i] - s) / L[i, i]
 
-    x = zeros(n)
+    x = np.zeros(n)
     for i in reversed(range(n)):
         s = 0
         for j in range(i + 1, n):
@@ -138,8 +138,8 @@ def check_spectral_radius(B):
     :param B: matrix
     :return: True or False
     """
-    eigenvalues = linalg.eigvals(B)
-    spectral_radius = linalg.norm(eigenvalues, ord=inf)
+    eigenvalues = np.linalg.eigvals(B)
+    spectral_radius = np.linalg.norm(eigenvalues, ord=np.inf)
     if spectral_radius - 1 >= eps or 1 - spectral_radius <= eps:
         print('Spectral radius >= 1, not convergency')
         return False
@@ -153,12 +153,12 @@ def check_gauss_seidel_convergency(A):
     :return: True or False
     """
     n = len(A)
-    D = eye(n)
-    L = tril(A, -1)
-    U = triu(A, 1)
+    D = np.eye(n)
+    L = np.tril(A, -1)
+    U = np.triu(A, 1)
     for i in range(n):
         D[i, i] = A[i, i]
-    B = -dot(linalg.inv(D + L), U)
+    B = -np.dot(np.linalg.inv(D + L), U)
 
     return check_spectral_radius(B)
 
@@ -173,7 +173,7 @@ def gauss_seidel(A, b, x0):
     A, b = A.copy(), b.copy()
 
     if not check_gauss_seidel_convergency(A):
-        return NaN, NaN
+        return np.NaN, np.NaN
 
     n = len(A)
 
@@ -188,7 +188,7 @@ def gauss_seidel(A, b, x0):
                     s += A[i, j] * x[j]
             x[i] = (b[i] - s) / A[i, i]
         cnt += 1
-        if linalg.norm(x - y) <= eps:
+        if np.linalg.norm(x - y) <= eps:
             break
 
     return x, cnt
@@ -200,12 +200,12 @@ def check_jacobi_convergency(A):
     :return: True or False
     """
     n = len(A)
-    D = eye(n)
-    L = tril(A, -1)
-    U = triu(A, 1)
+    D = np.eye(n)
+    L = np.tril(A, -1)
+    U = np.triu(A, 1)
     for i in range(n):
         D[i, i] = A[i, i]
-    B = -dot(linalg.inv(D), L + U)
+    B = -np.dot(np.linalg.inv(D), L + U)
 
     return check_spectral_radius(B)
 
@@ -220,7 +220,7 @@ def jacobi(A, b, x0):
     A, b = A.copy(), b.copy()
 
     if not check_jacobi_convergency(A):
-        return NaN, NaN
+        return np.NaN, np.NaN
 
     n = len(A)
 
@@ -235,7 +235,7 @@ def jacobi(A, b, x0):
                     s += A[i, j] * y[j]
             x[i] = (b[i] - s) / A[i, i]
         cnt += 1
-        if linalg.norm(x - y) <= eps:
+        if np.linalg.norm(x - y) <= eps:
             break
 
     return x, cnt
@@ -248,13 +248,13 @@ def check_successive_over_relaxation_convergency(A, w):
     :return: True or False
     """
     n = len(A)
-    D = eye(n)
-    L = tril(A, -1)
-    U = triu(A, 1)
+    D = np.eye(n)
+    L = np.tril(A, -1)
+    U = np.triu(A, 1)
     for i in range(n):
         D[i, i] = A[i, i]
 
-    B = dot(linalg.inv(D + dot(w, L)), (1 - w) * D - dot(w, U))
+    B = np.dot(np.linalg.inv(D + np.dot(w, L)), (1 - w) * D - np.dot(w, U))
 
     return check_spectral_radius(B)
 
@@ -270,7 +270,7 @@ def successive_over_relaxation(A, b, w, x0):
     A, b = A.copy(), b.copy()
 
     if not check_successive_over_relaxation_convergency(A, w):
-        return NaN, NaN
+        return np.NaN, np.NaN
 
     n = len(A)
 
@@ -285,7 +285,7 @@ def successive_over_relaxation(A, b, w, x0):
                     s += A[i][j] * x[j]
             x[i] = (1 - w) * x[i] + w * (b[i] - s) / A[i, i]
         cnt += 1
-        if linalg.norm(x - y) <= eps:
+        if np.linalg.norm(x - y) <= eps:
             break
 
     return x, cnt
@@ -300,7 +300,7 @@ def check_symmetric_and_positive_definite_matrix(A):
         print('A must be symmetric and positive definite matrix')
         return False
 
-    values = linalg.eigvals(A)
+    values = np.linalg.eigvals(A)
     if any(values < 0):
         print('A must be symmetric and positive definite matrix')
         return False
@@ -318,24 +318,24 @@ def conjugate_gradient(A, b, x0):
     A, b = A.copy(), b.copy()
 
     if not check_symmetric_and_positive_definite_matrix(A):
-        return NaN, NaN
+        return np.NaN, np.NaN
 
     n = len(A)
 
     x = x0.copy()
-    r = b - dot(A, x)
+    r = b - np.dot(A, x)
     p = r
     cnt = 1
     while True:
         y = x
-        alpha = dot(r.T, r) / dot(dot(p.T, A), p)
-        x = x + dot(alpha, p)
+        alpha = np.dot(r.T, r) / np.dot(np.dot(p.T, A), p)
+        x = x + np.dot(alpha, p)
         old_r = r
-        r = r - dot(dot(alpha, A), p)
-        beta = dot(r.T, r) / dot(old_r.T, old_r)
-        p = r + dot(beta, p)
+        r = r - np.dot(np.dot(alpha, A), p)
+        beta = np.dot(r.T, r) / np.dot(old_r.T, old_r)
+        p = r + np.dot(beta, p)
         cnt += 1
-        if linalg.norm(x - y) <= eps:
+        if np.linalg.norm(x - y) <= eps:
             break
 
     return x, cnt
@@ -345,10 +345,10 @@ def test():
     """Just test
     :return:
     """
-    A = array([[1, 1, 2],
-               [1, 2, 0],
-               [2, 0, 11]])
-    b = array([5, 8, 7])
+    A = np.array([[1, 1, 2],
+                  [1, 2, 0],
+                  [2, 0, 11]])
+    b = np.array([5, 8, 7])
     x = lu_decomposition_cholesky(A, b)
     # [-2, 5, 1]
     print(x)
@@ -357,67 +357,67 @@ def test():
     # [-2, 5, 1]
     print(x)
 
-    A = array([[2, -1, 0],
-               [-1, 3, -1],
-               [0, -1, 2]])
-    b = array([1, 8, -5])
+    A = np.array([[2, -1, 0],
+                  [-1, 3, -1],
+                  [0, -1, 2]])
+    b = np.array([1, 8, -5])
     x = lu_decomposition_doolittle(A, b)
     # [2, 3, -1]
     print(x)
 
-    x0 = array([-0.5, 2.6667, -2.5000])
+    x0 = np.array([-0.5, 2.6667, -2.5000])
     x, cnt = jacobi(A, b, x0)
     # [2, 3, -1]
     print(x, cnt)
 
-    x0 = array([0.5, 2.8333, -1.0833])
+    x0 = np.array([0.5, 2.8333, -1.0833])
     x, cnt = gauss_seidel(A, b, x0)
     # [2, 3, -1]
     print(x, cnt)
 
-    x0 = array([0.55, 3.1350, -1.0257])
+    x0 = np.array([0.55, 3.1350, -1.0257])
     x, cnt = successive_over_relaxation(A, b, 1.1, x0)
     # [2, 3, -1]
     print(x, cnt)
 
-    A = array([[0.76, -0.01, -0.14, -0.16],
-               [-0.01, 0.88, -0.03, 0.06],
-               [-0.14, -0.03, 1.01, -0.12],
-               [-0.16, 0.06, -0.12, 0.72]])
-    b = array([0.68, 1.18, 0.12, 0.74])
-    x0 = array([0.0, 0, 0, 0])
+    A = np.array([[0.76, -0.01, -0.14, -0.16],
+                  [-0.01, 0.88, -0.03, 0.06],
+                  [-0.14, -0.03, 1.01, -0.12],
+                  [-0.16, 0.06, -0.12, 0.72]])
+    b = np.array([0.68, 1.18, 0.12, 0.74])
+    x0 = np.array([0.0, 0, 0, 0])
     x, cnt = successive_over_relaxation(A, b, 1.05, x0)
     # [1.271497 1.284355 0.485795 1.284269] 7
     print(x, cnt)
 
-    A = array([[2, -1, 1],
-               [1, 1, 1],
-               [1, 1, -2]])
+    A = np.array([[2, -1, 1],
+                  [1, 1, 1],
+                  [1, 1, -2]])
     # Spectral radius >= 1, not convergency
     # False
     print(check_jacobi_convergency(A))
     # True
     print(check_gauss_seidel_convergency(A))
 
-    A = array([[31.0, -13, 0, 0, 0, -10, 0, 0, 0],
-               [-13, 35, -9, 0, -11, 0, 0, 0, 0],
-               [0, -9, 31, -10, 0, 0, 0, 0, 0],
-               [0, 0, -10, 79, -30, 0, 0, 0, -9],
-               [0, 0, 0, -30, 57, -7, 0, -5, 0],
-               [0, 0, 0, 0, -7, 47, -30, 0, 0],
-               [0, 0, 0, 0, 0, -30, 41, 0, 0],
-               [0, 0, 0, 0, -5, 0, 0, 27, -2],
-               [0.0, 0, 0, -9, 0, 0, 0, -2, 29]])
-    b = array([-15, 27, -23, 0, -20, 12, -7, 7, 10])
-    x0 = random.rand(9)
+    A = np.array([[31.0, -13, 0, 0, 0, -10, 0, 0, 0],
+                  [-13, 35, -9, 0, -11, 0, 0, 0, 0],
+                  [0, -9, 31, -10, 0, 0, 0, 0, 0],
+                  [0, 0, -10, 79, -30, 0, 0, 0, -9],
+                  [0, 0, 0, -30, 57, -7, 0, -5, 0],
+                  [0, 0, 0, 0, -7, 47, -30, 0, 0],
+                  [0, 0, 0, 0, 0, -30, 41, 0, 0],
+                  [0, 0, 0, 0, -5, 0, 0, 27, -2],
+                  [0.0, 0, 0, -9, 0, 0, 0, -2, 29]])
+    b = np.array([-15, 27, -23, 0, -20, 12, -7, 7, 10])
+    x0 = np.random.rand(9)
     x, cnt = jacobi(A, b, x0)
     # [-0.289233  0.345436 - 0.712811 - 0.220608 - 0.4304    0.154309 - 0.057822 0.201054  0.290229]
     # 42
     print(x, cnt)
 
-    A = array([[10, -7, 0, 1], [-3, 2.099999, 6, 2],
-               [5, -1, 5, -1], [2, 1, 0, 2]])
-    b = array([8, 5.900001, 5, 1])
+    A = np.array([[10, -7, 0, 1], [-3, 2.099999, 6, 2],
+                  [5, -1, 5, -1], [2, 1, 0, 2]])
+    b = np.array([8, 5.900001, 5, 1])
     # Spectral radius >= 1, not convergency
     # False
     print(check_successive_over_relaxation_convergency(A, 1.0))
