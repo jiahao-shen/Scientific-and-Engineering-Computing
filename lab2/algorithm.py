@@ -8,7 +8,7 @@
 """
 import numpy as np
 
-eps = 1e-6
+EPS = 1e-6
 np.set_printoptions(suppress=True, precision=6)
 
 
@@ -138,6 +138,7 @@ def check_spectral_radius(B):
     :param B: matrix
     :return: True or False
     """
+    eps = 1e-6
     eigenvalues = np.linalg.eigvals(B)
     spectral_radius = np.linalg.norm(eigenvalues, ord=np.inf)
     if spectral_radius - 1 >= eps or 1 - spectral_radius <= eps:
@@ -163,11 +164,12 @@ def check_gauss_seidel_convergency(A):
     return check_spectral_radius(B)
 
 
-def gauss_seidel(A, b, x0):
+def gauss_seidel(A, b, x0, eps=EPS):
     """Gauss Seidel Method
     :param A: matrix
     :param b: vector
     :param x0: vector
+    :param eps: default 1e-6
     :return: vector x, iterations cnt
     """
     A, b = A.copy(), b.copy()
@@ -210,11 +212,12 @@ def check_jacobi_convergency(A):
     return check_spectral_radius(B)
 
 
-def jacobi(A, b, x0):
+def jacobi(A, b, x0, eps=EPS):
     """Jacobi Method
     :param A: matrix
     :param b: vector
     :param x0: vector
+    :param eps: default 1e-6
     :return: vector x, iterations cnt
     """
     A, b = A.copy(), b.copy()
@@ -259,12 +262,13 @@ def check_successive_over_relaxation_convergency(A, w):
     return check_spectral_radius(B)
 
 
-def successive_over_relaxation(A, b, w, x0):
+def successive_over_relaxation(A, b, w, x0, eps=EPS):
     """Successive Over Relaxation Method
     :param A: matrix
     :param b: vector
     :param w: float(1 < w < 2)
     :param x0: vector
+    :param eps: default 1e-6
     :return: vector x, iterations cnt
     """
     A, b = A.copy(), b.copy()
@@ -308,11 +312,12 @@ def check_symmetric_and_positive_definite_matrix(A):
     return True
 
 
-def conjugate_gradient(A, b, x0):
+def conjugate_gradient(A, b, x0, eps=EPS):
     """Conjugate Gradient Method
     :param A: matrix
     :param b: vector
     :param x0: vector
+    :param eps: default 1e-6
     :return: vector x, iterations cnt
     """
     A, b = A.copy(), b.copy()
