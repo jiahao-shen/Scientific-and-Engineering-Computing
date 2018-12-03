@@ -32,7 +32,7 @@ def pivot_gauss(A, b):
     :param b: vector
     :return: vector x
     """
-    A, b = A.copy(), b.copy()
+    A, b = np.copy(A), np.copy(b)
     n = len(A)
     for i in range(0, n - 1):
         for j in range(i + 1, n):
@@ -56,7 +56,7 @@ def lu_decomposition_doolittle(A, b):
     :param b: vector
     :return: vector x
     """
-    A, b = A.copy(), b.copy()
+    A, b = np.copy(A), np.copy(b)
     n = len(A)
     L = np.eye(n)
     U = np.zeros((n, n))
@@ -95,7 +95,7 @@ def lu_decomposition_cholesky(A, b):
     :param b: vector
     :return: vector x
     """
-    A, b = A.copy(), b.copy()
+    A, b = np.copy(A), np.copy(b)
 
     if not check_symmetric_and_positive_definite_matrix(A):
         return np.NaN
@@ -172,14 +172,14 @@ def gauss_seidel(A, b, x0, eps=EPS):
     :param eps: default 1e-6
     :return: vector x, iterations cnt
     """
-    A, b = A.copy(), b.copy()
+    A, b = np.copy(A), np.copy(b)
 
     if not check_gauss_seidel_convergency(A):
         return np.NaN, np.NaN
 
     n = len(A)
 
-    x = x0.copy()
+    x = np.copy(x0)
     cnt = 0
     while True:
         y = x.copy()
@@ -220,14 +220,14 @@ def jacobi(A, b, x0, eps=EPS):
     :param eps: default 1e-6
     :return: vector x, iterations cnt
     """
-    A, b = A.copy(), b.copy()
+    A, b = np.copy(A), np.copy(b)
 
     if not check_jacobi_convergency(A):
         return np.NaN, np.NaN
 
     n = len(A)
 
-    x = x0.copy()
+    x = np.copy(x0)
     cnt = 0
     while True:
         y = x.copy()
@@ -271,14 +271,14 @@ def successive_over_relaxation(A, b, w, x0, eps=EPS):
     :param eps: default 1e-6
     :return: vector x, iterations cnt
     """
-    A, b = A.copy(), b.copy()
+    A, b = np.copy(A), np.copy(b)
 
     if not check_successive_over_relaxation_convergency(A, w):
         return np.NaN, np.NaN
 
     n = len(A)
 
-    x = x0.copy()
+    x = np.copy(x0)
     cnt = 0
     while True:
         y = x.copy()
@@ -320,14 +320,14 @@ def conjugate_gradient(A, b, x0, eps=EPS):
     :param eps: default 1e-6
     :return: vector x, iterations cnt
     """
-    A, b = A.copy(), b.copy()
+    A, b = np.copy(A), np.copy(b)
 
     if not check_symmetric_and_positive_definite_matrix(A):
         return np.NaN, np.NaN
 
     n = len(A)
 
-    x = x0.copy()
+    x = np.copy(x0)
     r = b - np.dot(A, x)
     p = r
     cnt = 1
