@@ -6,17 +6,13 @@
 @time: 2018-11-30 01:41:19
 @blog: https://jiahaoplus.com
 """
-from algorithm import *
+from linear_function import *
 import time
 
 
 def main():
-    """
-    目前使用迭代法计算方程组1时不收敛
-    以后会进行修改
-    """
     A1 = np.array([[10, -7, 0, 1], [-3, 2.099999, 6, 2],
-                [5, -1, 5, -1], [2, 1, 0, 2]])
+                   [5, -1, 5, -1], [2, 1, 0, 2]])
     b1 = np.array([8, 5.900001, 5, 1])
 
     A2, b2 = get_equation_set_2(4)
@@ -61,6 +57,7 @@ def main():
     print('Jacobi')
 
     x0 = np.random.rand(4)
+    print('x0 =', x0)
 
     t = time.time()
     x1, cnt1 = jacobi(A1, b1, x0)
@@ -85,6 +82,7 @@ def main():
     W = [1.1, 1.25, 1.5]
 
     x0 = np.random.rand(4)
+    print('x0 =', x0)
 
     for w in W:
         print('w =', w)
@@ -112,6 +110,7 @@ def main():
     print('Conjugate Gradient')
 
     x0 = np.random.rand(4)
+    print('x0 =', x0)
 
     t = time.time()
     x1, cnt1 = conjugate_gradient(A1, b1, x0)
