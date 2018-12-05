@@ -7,31 +7,18 @@
 @blog: https://jiahaoplus.com
 """
 import math
+import sympy as sy
 
 eps = 1e-8
+x = sy.Symbol('x')
 
 
-def f1(x):
-    return x ** 2 - 3 * x + 2 - math.exp(x)
-
-
-def d1(x):
-    return 2 * x - 3 - math.exp(x)
-
-
-def f2(x):
-    return x ** 3 - x - 1
-
-
-def d2(x):
-    return 3 * x ** 2 - 1
-
-
-def bisection(f):
+def bisection(y):
     """Bisection Method
-    :param f: f(x)
+    :param y: function expression
     :return:
     """
+    f = sy.lambdify(x, y)
     l, r, cnt = 0, 100, 0
     while True:
         cnt += 1
@@ -46,88 +33,96 @@ def bisection(f):
             break
 
 
-def newton(f, d):
+def newton(y):
     """Newton Method
-    :param f: f(x)
-    :param d: f'(x)
+    :param y: function expression
     :return:
     """
-    x, cnt = 0, 0
+    f = sy.lambdify(x, y)
+    d = sy.lambdify(x, sy.diff(y, x))
+
+    x0, cnt = 0, 0
     while True:
         cnt += 1
-        new_x = x - f(x) / d(x)
-        if math.fabs(x - new_x) <= eps:
-            print('x =', x)
+        new_x = x0 - f(x0) / d(x0)
+        if math.fabs(x0 - new_x) <= eps:
+            print('x =', x0)
             print('cnt =', cnt)
             break
-        x = new_x
+        x0 = new_x
 
 
-def newton_downhill(f, d):
+def newton_downhill(y):
     """Newton Downhill Method
-    :param f: f(x)
-    :param d: d(x)
+    :param y: function expression
     :return:
     """
-    x, cnt = 0, 0
+    f = sy.lambdify(x, y)
+    d = sy.lambdify(x, sy.diff(y, x))
+
+    x0, cnt = 0, 0
     while True:
         cnt += 1
         k = 1
-        new_x = x - k * f(x) / d(x)
-        while math.fabs(f(new_x)) >= math.fabs(f(x)):
+        new_x = x0 - k * f(x0) / d(x0)
+        while math.fabs(f(new_x)) >= math.fabs(f(x0)):
             k /= 2
-            new_x = x - k * f(x) / d(x)
-        if math.fabs(x - new_x) <= eps:
-            print('x =', x)
+            new_x = x0 - k * f(x0) / d(x0)
+        if math.fabs(x0 - new_x) <= eps:
+            print('x =', x0)
             print('cnt =', cnt)
             break
-        x = new_x
+        x0 = new_x
 
 
-def secant(f):
+def secant(y):
     """Secant Method
-    :param f: f(x)
+    :param y: function expression
     :return:
     """
-    old_x, x, cnt = 0, 5, 0
+    f = sy.lambdify(x, y)
+    old_x, x0, cnt = 0, 5, 0
     while True:
         cnt += 1
-        new_x = x - f(x) * (x - old_x) / (f(x) - f(old_x))
-        if math.fabs(x - new_x) <= eps:
-            print('x =', x)
+        new_x = x0 - f(x0) * (x0 - old_x) / (f(x0) - f(old_x))
+        if math.fabs(x0 - new_x) <= eps:
+            print('x =', x0)
             print('cnt =', cnt)
             break
-        old_x, x = x, new_x
-        x = new_x
+        old_x, x0 = x0, new_x
+        x0 = new_x
 
 
 def main():
+    y1 = x ** 2 - 3 * x + 2 - sy.exp(x)
+    y2 = x ** 3 - x - 1
+
     print('Bisection Method')
     print('Function1')
-    bisection(f1)
+    bisection(y1)
     print('Function2')
-    bisection(f2)
+    bisection(y2)
 
     print('--------------------')
     print('Newton Method')
     print('Function1')
-    newton(f1, d1)
+    newton(y1)
     print('Function2')
-    newton(f2, d2)
+    newton(y2)
 
     print('--------------------')
     print('Newton Downhill Method')
     print('Function1')
-    newton_downhill(f1, d1)
+    newton_downhill(y1)
     print('Function2')
-    newton_downhill(f2, d2)
+    newton_downhill(y2)
 
     print('--------------------')
     print('Secant Method')
     print('Function1')
-    secant(f1)
+    secant(y1)
     print('Function2')
-    secant(f2)
+    secant(y2)
 
 
 if __name__ == '__main__':
