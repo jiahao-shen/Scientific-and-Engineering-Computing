@@ -24,8 +24,6 @@ def get_XY(n):
     return X, Y
 
 
-
-
 def main():
     """
     :return:
@@ -47,7 +45,7 @@ def main():
         print('f(' + str(xi) + ') =', y(xi))
     print('----------------------------------')
 
-    print('Test2')
+    print('Test 2')
     for n in range(2, 10):
         print('n =', n)
         X, Y = get_XY(n)
@@ -60,7 +58,5 @@ def main():
         print()
 
 
-
 if __name__ == '__main__':
     main()
-
