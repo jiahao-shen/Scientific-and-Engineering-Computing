@@ -7,7 +7,6 @@
 @blog: https://jiahaoplus.com
 """
 import sympy as sy
-import numpy as np
 
 x = sy.Symbol('x')
 
@@ -16,7 +15,7 @@ def lagrange(X, Y):
     """Lagrange Interpolation
     :param X:
     :param Y:
-    :return:
+    :return: lambda(x, y)
     """
     n = len(X)
     y = 0
@@ -29,8 +28,7 @@ def lagrange(X, Y):
         y += l * Y[i]
 
     y = sy.simplify(y)
-
-    print(y)
+    return y
 
 
 def newton(X, Y):
@@ -39,45 +37,38 @@ def newton(X, Y):
     :param Y:
     :return:
     """
-    # n = len(X)
-    #
-    # f = np.zeros(n + 1)
-    #
-    # for k in range(n):
-    #     s = 0
-    #     for i in range(k):
-    #         t = Y[i]
-    #         for j in range(k):
-    #             if i != j:
-    #                 t /= (X[i] - X[j])
-    #         s += t
-    #     f[k] = s
-    #
-    # y = 0
-    #
-    # for i in range(n):
-    #     s = f[i]
-    #     for j in range(i):
-    #         s *= (x - X[j])
-    #     y += s
-    #
-    # y = sy.simplify(y)
-    #
-    # y = sy.lambdify(x, y)
-    #
-    # print(y(8.4))
+    n = len(X)
+
+    f = []
+    y = Y[0]
+
+    for k in range(n):
+        s = 0
+        for i in range(k + 1):
+            t = Y[i]
+            for j in range(k + 1):
+                if j != i:
+                    t /= X[i] - X[j]
+            s += t
+        f.append(s)
+
+    for k in range(1, n):
+        s = f[k]
+        for i in range(k):
+            s *= (x - X[i])
+        y += s
+
+    y = sy.simplify(y)
+    return y
 
 
 def test():
-    X = [3, 6, 9]
-    Y = [10, 8, 4]
-    lagrange(X, Y)
-
-    # X = [8.1, 8.3, 8.6, 8.7]
-    # Y = [16.94410, 17.56492, 18.50515, 18.82091]
+    pass
+    # X = [-2, -1, 1, 2]
+    # Y = [5, 3, 17, 21]
+    # newton(X, Y)
 
     # lagrange(X, Y)
-    # newton(X, Y)
 
 
 if __name__ == '__main__':
