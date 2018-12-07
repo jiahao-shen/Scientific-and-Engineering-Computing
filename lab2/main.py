@@ -6,7 +6,7 @@
 @time: 2018-11-30 01:41:19
 @blog: https://jiahaoplus.com
 """
-from linear_function import *
+from linear_equations import *
 import time
 
 

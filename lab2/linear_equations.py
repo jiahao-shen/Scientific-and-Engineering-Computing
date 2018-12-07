@@ -1,7 +1,7 @@
 """
 @project: Scientific-and-Engineering-Computing
 @author: sam
-@file linear_function.py
+@file linear_equations.py
 @ide: PyCharm
 @time: 2018-12-01 01:41:19
 @blog: https://jiahaoplus.com
