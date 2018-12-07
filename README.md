@@ -15,3 +15,7 @@
 - Gauss Seidel
 - Successive Over Relaxation
 - Conjugate Gradient
+
+## Interpolation
+- Lagrange
+- Newton
