@@ -1,7 +1,7 @@
 """
 @project: Scientific-and-Engineering-Computing
 @author: sam
-@file linear_equations.py
+@file interpolation.py
 @ide: PyCharm
 @time: 2018-12-05 20:05:12
 @blog: https://jiahaoplus.com
