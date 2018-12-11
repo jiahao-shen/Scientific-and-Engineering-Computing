@@ -10,6 +10,20 @@ from linear_equations import *
 import time
 
 
+def get_equation_set_2(n):
+    """Get equation 2
+    :param n: int
+    :return: matrix A, b
+    """
+    A = np.eye(n)
+    b = np.zeros(n)
+    for i in range(n):
+        for j in range(n):
+            A[i, j] = 1 / (i + j + 1)
+            b[i] += A[i][j]
+    return A, b
+
+
 def main():
     A1 = np.array([[10, -7, 0, 1], [-3, 2.099999, 6, 2],
                    [5, -1, 5, -1], [2, 1, 0, 2]])

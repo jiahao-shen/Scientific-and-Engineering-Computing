@@ -12,20 +12,6 @@ EPS = 1e-6
 np.set_printoptions(suppress=True, precision=6)
 
 
-def get_equation_set_2(n):
-    """Get equation 2
-    :param n: int
-    :return: matrix A, b
-    """
-    A = np.eye(n)
-    b = np.zeros(n)
-    for i in range(n):
-        for j in range(n):
-            A[i, j] = 1 / (i + j + 1)
-            b[i] += A[i][j]
-    return A, b
-
-
 def pivot_gauss(A, b):
     """Pivot Gauss Method
     :param A: matrix
