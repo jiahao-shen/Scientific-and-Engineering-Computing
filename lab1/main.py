@@ -9,7 +9,7 @@
 import math
 import sympy as sy
 
-eps = 1e-8
+EPS = 1e-8
 x = sy.Symbol('x')
 
 
@@ -27,7 +27,7 @@ def bisection(y):
             r = mid
         elif f(mid) * f(r) <= 0:
             l = mid
-        if math.fabs(l - r) <= eps:
+        if math.fabs(l - r) <= EPS:
             print('x =', mid)
             print('cnt =', cnt)
             break
@@ -45,7 +45,7 @@ def newton(y):
     while True:
         cnt += 1
         new_x = x0 - f(x0) / d(x0)
-        if math.fabs(x0 - new_x) <= eps:
+        if math.fabs(x0 - new_x) <= EPS:
             print('x =', x0)
             print('cnt =', cnt)
             break
@@ -68,7 +68,7 @@ def newton_downhill(y):
         while math.fabs(f(new_x)) >= math.fabs(f(x0)):
             k /= 2
             new_x = x0 - k * f(x0) / d(x0)
-        if math.fabs(x0 - new_x) <= eps:
+        if math.fabs(x0 - new_x) <= EPS:
             print('x =', x0)
             print('cnt =', cnt)
             break
@@ -85,7 +85,7 @@ def secant(y):
     while True:
         cnt += 1
         new_x = x0 - f(x0) * (x0 - old_x) / (f(x0) - f(old_x))
-        if math.fabs(x0 - new_x) <= eps:
+        if math.fabs(x0 - new_x) <= EPS:
             print('x =', x0)
             print('cnt =', cnt)
             break
