@@ -3,12 +3,16 @@
 @author: sam
 @file main.py
 @ide: PyCharm
-@time: 2018-12-05 20:05:02
+@time: 2018-12-23 15:25:13
 @blog: https://jiahaoplus.com
 """
-from interpolation import *
-import matplotlib.pyplot as plt
+import sys
+sys.path.append('..')
+
+from fitting import *
+from lab3.interpolation import *
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def get_XY(n):
@@ -31,20 +35,40 @@ def main():
     :return:
     """
     print('Test 1')
-    X = [0.2, 0.4, 0.6, 0.8, 1.0]
-    Y = [0.98, 0.92, 0.81, 0.64, 0.38]
-    I = [0, 1, 10, 11]
-    print('Lagrange Method')
-    y = sy.lambdify(x, lagrange(X, Y))
-    for i in I:
-        xi = 0.2 + 0.08 * i
-        print('f(' + str(xi) + ') =', y(xi))
-    print('----------------------------------')
-    print('Newton Method')
-    y = sy.lambdify(x, newton(X, Y))
-    for i in I:
-        xi = 0.2 + 0.08 * i
-        print('f(' + str(xi) + ') =', y(xi))
+    X = [0.0, 0.1, 0.2, 0.3, 0.5, 0.8, 1.0]
+    Y = [1.0, 0.41, 0.50, 0.61, 0.91, 2.02, 2.46]
+
+    y = least_squares(X, Y, 2)
+    print('Least Squares Method:', y)
+
+    x_val = np.linspace(0, 1, 100)
+    y_val = sy.lambdify(x, y)(x_val)
+    plt.figure(figsize=(5, 15))
+    plt.subplot(3, 1, 1)
+    plt.title('Least Squares Method')
+    plt.plot(x_val, y_val)
+    plt.scatter(X, Y)
+
+    y = lagrange(X, Y)
+    print('Lagrange Method:', y)
+
+    y_val = sy.lambdify(x, y)(x_val)
+    plt.subplot(3, 1, 2)
+    plt.title('Lagrange Method')
+    plt.plot(x_val, y_val)
+    plt.scatter(X, Y)
+
+    y = newton(X, Y)
+    print('Newton Method:', y)
+
+    y_val = sy.lambdify(x, y)(x_val)
+    plt.subplot(3, 1, 3)
+    plt.title('Newton Method')
+    plt.plot(x_val, y_val)
+    plt.scatter(X, Y)
+
+    plt.show()
+
     print('----------------------------------')
 
     print('Test 2')
@@ -57,7 +81,7 @@ def main():
 
         x_val = np.linspace(-1, 1, 100)
         y_val = sy.lambdify(x, y)(x_val)
-        plt.subplot(3, 1, 1)
+        plt.subplot(2, 2, 1)
         plt.title('Lagrange Method(n=' + str(n) + ')')
         plt.scatter(X, Y)
         plt.plot(x_val, y_val)
@@ -66,14 +90,23 @@ def main():
         print('Newton Method:', y)
 
         y_val = sy.lambdify(x, y)(x_val)
-        plt.subplot(3, 1, 2)
+        plt.subplot(2, 2, 2)
         plt.title('Newton Method(n=' + str(n) + ')')
+        plt.plot(x_val, y_val)
+        plt.scatter(X, Y)
+
+        y = least_squares(X, Y, 3)
+        print('Least Squares Method:', y)
+
+        y_val = sy.lambdify(x, y)(x_val)
+        plt.subplot(2, 2, 3)
+        plt.title('Least Squares Method(n=' + str(n) + ')')
         plt.plot(x_val, y_val)
         plt.scatter(X, Y)
 
         y = 1 / (1 + 25 * x ** 2)
         y_val = sy.lambdify(x, y)(x_val)
-        plt.subplot(3, 1, 3)
+        plt.subplot(2, 2, 4)
         plt.plot(x_val, y_val)
         plt.scatter(X, Y)
         plt.title('1/(1+25x^2) (n=' + str(n) + ')')
