@@ -19,3 +19,11 @@
 ## Interpolation
 - Lagrange
 - Newton
+
+## Caculus
+- Simpson
+- Complex Simpson
+- Variable Step Simpson
+
+## Fitting
+- Least Squares
