@@ -44,7 +44,7 @@ def main():
     x_val = np.linspace(0, 1, 100)
     y_val = sy.lambdify(x, y)(x_val)
     plt.figure(figsize=(5, 15))
-    plt.subplot(3, 1, 1)
+    plt.subplot(1, 3, 1)
     plt.title('Least Squares Method')
     plt.plot(x_val, y_val)
     plt.scatter(X, Y)
@@ -53,7 +53,7 @@ def main():
     print('Lagrange Method:', y)
 
     y_val = sy.lambdify(x, y)(x_val)
-    plt.subplot(3, 1, 2)
+    plt.subplot(1, 3, 2)
     plt.title('Lagrange Method')
     plt.plot(x_val, y_val)
     plt.scatter(X, Y)
@@ -62,7 +62,7 @@ def main():
     print('Newton Method:', y)
 
     y_val = sy.lambdify(x, y)(x_val)
-    plt.subplot(3, 1, 3)
+    plt.subplot(1, 3, 3)
     plt.title('Newton Method')
     plt.plot(x_val, y_val)
     plt.scatter(X, Y)
