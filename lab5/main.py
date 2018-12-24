@@ -77,7 +77,7 @@ def main():
         X, Y = get_XY(n)
 
         y = lagrange(X, Y)
-        print('Lagrange Method:', y)
+        print('Lagrange Method: f(0.98) =', sy.lambdify(x, y)(0.98))
 
         x_val = np.linspace(-1, 1, 100)
         y_val = sy.lambdify(x, y)(x_val)
@@ -87,7 +87,7 @@ def main():
         plt.plot(x_val, y_val)
 
         y = newton(X, Y)
-        print('Newton Method:', y)
+        print('Newton Method: f(0.98) =', sy.lambdify(x, y)(0.98))
 
         y_val = sy.lambdify(x, y)(x_val)
         plt.subplot(2, 2, 2)
@@ -96,7 +96,7 @@ def main():
         plt.scatter(X, Y)
 
         y = least_squares(X, Y, 3)
-        print('Least Squares Method:', y)
+        print('Least Squares Method: f(0.98) =', sy.lambdify(x, y)(0.98))
 
         y_val = sy.lambdify(x, y)(x_val)
         plt.subplot(2, 2, 3)
@@ -105,6 +105,7 @@ def main():
         plt.scatter(X, Y)
 
         y = 1 / (1 + 25 * x ** 2)
+        print('y = 1 / (1 + 25 * x ^ 2): f(0.98) =', sy.lambdify(x, y)(0.98))
         y_val = sy.lambdify(x, y)(x_val)
         plt.subplot(2, 2, 4)
         plt.plot(x_val, y_val)
