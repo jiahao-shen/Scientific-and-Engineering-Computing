@@ -38,7 +38,7 @@ def main():
     X = [0.0, 0.1, 0.2, 0.3, 0.5, 0.8, 1.0]
     Y = [1.0, 0.41, 0.50, 0.61, 0.91, 2.02, 2.46]
 
-    y = least_squares(X, Y, 2)
+    y = least_squares(X, Y, 3)
     print('Least Squares Method:', y)
 
     x_val = np.linspace(0, 1, 100)
