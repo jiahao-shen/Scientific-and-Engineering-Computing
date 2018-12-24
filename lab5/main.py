@@ -43,7 +43,7 @@ def main():
 
     x_val = np.linspace(0, 1, 100)
     y_val = sy.lambdify(x, y)(x_val)
-    plt.figure(figsize=(5, 15))
+    plt.figure(figsize=(15, 5))
     plt.subplot(1, 3, 1)
     plt.title('Least Squares Method')
     plt.plot(x_val, y_val)
