@@ -27,3 +27,5 @@
 
 ## Fitting
 - Least Squares
+
+## Iterations
