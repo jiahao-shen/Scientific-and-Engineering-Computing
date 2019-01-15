@@ -22,7 +22,7 @@ def equation_1():
 
 
 def equation_2():
-    """I_n = 1 - n * I_{n - 1}
+    """I_n = 1 - n * I_{n-1}
     :return:
     """
     I = zeros(20)
