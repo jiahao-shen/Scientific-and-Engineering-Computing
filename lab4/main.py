@@ -8,6 +8,7 @@
 """
 from calculus import *
 
+
 def main():
     y = 1 / (1 + x)
     print('Simpson Method')

@@ -6,9 +6,10 @@
 @time: 2018-12-23 15:30:44
 @blog: https://jiahaoplus.com
 """
-import sympy as sy
+from sympy import Symbol, lambdify, simplify
 
-x = sy.Symbol('x')
+
+x = Symbol('x')
 
 
 def inner_product(f1, f2, X):
@@ -40,29 +41,29 @@ def least_squares(X, Y, n):
     beta = []
 
     p.append(1)
-    alpha.append(inner_product(sy.lambdify(x, x * p[0]), sy.lambdify(x, p[0]), X) / inner_product(sy.lambdify(x, p[0]),
-                                                                                                  sy.lambdify(x, p[0]),
+    alpha.append(inner_product(lambdify(x, x * p[0]), lambdify(x, p[0]), X) / inner_product(lambdify(x, p[0]),
+                                                                                                  lambdify(x, p[0]),
                                                                                                   X))
     p.append(x - alpha[0])
 
     for i in range(1, n):
         alpha.append(
-            inner_product(sy.lambdify(x, x * p[i]), sy.lambdify(x, p[i]), X) / inner_product(sy.lambdify(x, p[i]),
-                                                                                             sy.lambdify(x, p[i]), X))
+            inner_product(lambdify(x, x * p[i]), lambdify(x, p[i]), X) / inner_product(lambdify(x, p[i]),
+                                                                                             lambdify(x, p[i]), X))
         beta.append(
-            inner_product(sy.lambdify(x, p[i]), sy.lambdify(x, p[i]), X) / inner_product(sy.lambdify(x, p[i - 1]),
-                                                                                         sy.lambdify(x, p[i - 1]), X))
+            inner_product(lambdify(x, p[i]), lambdify(x, p[i]), X) / inner_product(lambdify(x, p[i - 1]),
+                                                                                         lambdify(x, p[i - 1]), X))
         p.append((x - alpha[i]) * p[i] - beta[i - 1] * p[i - 1])
 
     for i in range(n + 1):
         a.append(
-            inner_product(sy.lambdify(x, p[i]), f, X) / inner_product(sy.lambdify(x, p[i]), sy.lambdify(x, p[i]), X))
+            inner_product(lambdify(x, p[i]), f, X) / inner_product(lambdify(x, p[i]), lambdify(x, p[i]), X))
 
     S = 0
     for i in range(n + 1):
         S += p[i] * a[i]
 
-    S = sy.simplify(S)
+    S = simplify(S)
 
     return S
 

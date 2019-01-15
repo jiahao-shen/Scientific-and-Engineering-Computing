@@ -8,12 +8,16 @@
 """
 import sys
 
+
 sys.path.append('..')
+
 
 from fitting import *
 from lab3.interpolation import *
-import numpy as np
+from numpy import linspace
 import matplotlib.pyplot as plt
+
+
 
 
 def get_XY():
@@ -41,8 +45,8 @@ def main():
     y = least_squares(X, Y, 3)
     print('Least Squares Method:', y)
 
-    x_val = np.linspace(0, 1, 100)
-    y_val = sy.lambdify(x, y)(x_val)
+    x_val = linspace(0, 1, 100)
+    y_val = lambdify(x, y)(x_val)
     plt.figure(figsize=(15, 5))
     plt.subplot(1, 3, 1)
     plt.title('Least Squares Method')
@@ -52,7 +56,7 @@ def main():
     y = lagrange(X, Y)
     print('Lagrange Method:', y)
 
-    y_val = sy.lambdify(x, y)(x_val)
+    y_val = lambdify(x, y)(x_val)
     plt.subplot(1, 3, 2)
     plt.title('Lagrange Method')
     plt.plot(x_val, y_val)
@@ -61,7 +65,7 @@ def main():
     y = newton(X, Y)
     print('Newton Method:', y)
 
-    y_val = sy.lambdify(x, y)(x_val)
+    y_val = lambdify(x, y)(x_val)
     plt.subplot(1, 3, 3)
     plt.title('Newton Method')
     plt.plot(x_val, y_val)
@@ -75,36 +79,36 @@ def main():
     X, Y = get_XY()
 
     y = lagrange(X, Y)
-    print('Lagrange Method: f(0.98) =', sy.lambdify(x, y)(0.98))
+    print('Lagrange Method: f(0.98) =', lambdify(x, y)(0.98))
 
-    x_val = np.linspace(-1, 1, 100)
-    y_val = sy.lambdify(x, y)(x_val)
+    x_val = linspace(-1, 1, 100)
+    y_val = lambdify(x, y)(x_val)
     plt.subplot(2, 2, 1)
     plt.title('Lagrange Method')
     plt.scatter(X, Y)
     plt.plot(x_val, y_val)
 
     y = newton(X, Y)
-    print('Newton Method: f(0.98) =', sy.lambdify(x, y)(0.98))
+    print('Newton Method: f(0.98) =', lambdify(x, y)(0.98))
 
-    y_val = sy.lambdify(x, y)(x_val)
+    y_val = lambdify(x, y)(x_val)
     plt.subplot(2, 2, 2)
     plt.title('Newton Method')
     plt.plot(x_val, y_val)
     plt.scatter(X, Y)
 
     y = least_squares(X, Y, 3)
-    print('Least Squares Method: f(0.98) =', sy.lambdify(x, y)(0.98))
+    print('Least Squares Method: f(0.98) =', lambdify(x, y)(0.98))
 
-    y_val = sy.lambdify(x, y)(x_val)
+    y_val = lambdify(x, y)(x_val)
     plt.subplot(2, 2, 3)
     plt.title('Least Squares Method')
     plt.plot(x_val, y_val)
     plt.scatter(X, Y)
 
     y = 1 / (1 + 25 * x ** 2)
-    print('y = 1 / (1 + 25 * x ^ 2): f(0.98) =', sy.lambdify(x, y)(0.98))
-    y_val = sy.lambdify(x, y)(x_val)
+    print('y = 1 / (1 + 25 * x ^ 2): f(0.98) =', lambdify(x, y)(0.98))
+    y_val = lambdify(x, y)(x_val)
     plt.subplot(2, 2, 4)
     plt.plot(x_val, y_val)
     plt.scatter(X, Y)

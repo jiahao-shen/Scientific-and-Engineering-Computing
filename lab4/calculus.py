@@ -6,10 +6,12 @@
 @time: 2018-12-13 10:36:13
 @blog: https://jiahaoplus.com
 """
-import sympy as sy
+from sympy import Symbol, lambdify
 
-x = sy.Symbol('x')
+
+x = Symbol('x')
 EPS = 1e-5
+
 
 def simpson(y, a, b):
     """Simpson Method
@@ -18,7 +20,7 @@ def simpson(y, a, b):
     :param b: upper
     :return: integral
     """
-    f = sy.lambdify(x, y)
+    f = lambdify(x, y)
     result = (b - a) / 6 * (f(a) + 4 * f((a + b) / 2) + f(b))
     return result
 
@@ -31,7 +33,7 @@ def complex_simpson(y, a, b, n=10):
     :param n: int
     :return: integral
     """
-    f = sy.lambdify(x, y)
+    f = lambdify(x, y)
     h = (b - a) / n
 
     s1 = 0
@@ -56,7 +58,7 @@ def variable_step_simpson(y, a, b, eps=EPS):
     :param eps: default 1e-5
     :return: integral
     """
-    f = sy.lambdify(x, y)
+    f = lambdify(x, y)
     h = b - a
     n = 1
     T = (h / 2) * (f(a) + f(b))

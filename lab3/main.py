@@ -7,8 +7,8 @@
 @blog: https://jiahaoplus.com
 """
 from interpolation import *
+from numpy import linspace
 import matplotlib.pyplot as plt
-import numpy as np
 
 
 def get_XY(n):
@@ -35,13 +35,13 @@ def main():
     Y = [0.98, 0.92, 0.81, 0.64, 0.38]
     I = [0, 1, 10, 11]
     print('Lagrange Method')
-    y = sy.lambdify(x, lagrange(X, Y))
+    y = lambdify(x, lagrange(X, Y))
     for i in I:
         xi = 0.2 + 0.08 * i
         print('f(' + str(xi) + ') =', y(xi))
     print('----------------------------------')
     print('Newton Method')
-    y = sy.lambdify(x, newton(X, Y))
+    y = lambdify(x, newton(X, Y))
     for i in I:
         xi = 0.2 + 0.08 * i
         print('f(' + str(xi) + ') =', y(xi))
@@ -55,8 +55,8 @@ def main():
         y = lagrange(X, Y)
         print('Lagrange Method:', y)
 
-        x_val = np.linspace(-1, 1, 100)
-        y_val = sy.lambdify(x, y)(x_val)
+        x_val = linspace(-1, 1, 100)
+        y_val = lambdify(x, y)(x_val)
         plt.subplot(3, 1, 1)
         plt.title('Lagrange Method(n=' + str(n) + ')')
         plt.scatter(X, Y)
@@ -65,14 +65,14 @@ def main():
         y = newton(X, Y)
         print('Newton Method:', y)
 
-        y_val = sy.lambdify(x, y)(x_val)
+        y_val = lambdify(x, y)(x_val)
         plt.subplot(3, 1, 2)
         plt.title('Newton Method(n=' + str(n) + ')')
         plt.plot(x_val, y_val)
         plt.scatter(X, Y)
 
         y = 1 / (1 + 25 * x ** 2)
-        y_val = sy.lambdify(x, y)(x_val)
+        y_val = lambdify(x, y)(x_val)
         plt.subplot(3, 1, 3)
         plt.plot(x_val, y_val)
         plt.scatter(X, Y)

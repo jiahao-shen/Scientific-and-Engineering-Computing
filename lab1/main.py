@@ -6,11 +6,12 @@
 @time: 2018-11-20 00:00:00
 @blog: https://jiahaoplus.com
 """
-import math
-import sympy as sy
+from math import fabs
+from sympy import Symbol, lambdify, diff, exp
+
 
 EPS = 1e-8
-x = sy.Symbol('x')
+x = Symbol('x')
 
 
 def bisection(y):
@@ -18,7 +19,7 @@ def bisection(y):
     :param y: function expression
     :return:
     """
-    f = sy.lambdify(x, y)
+    f = lambdify(x, y)
     l, r, cnt = 0, 100, 0
     while True:
         cnt += 1
@@ -27,7 +28,7 @@ def bisection(y):
             r = mid
         elif f(mid) * f(r) <= 0:
             l = mid
-        if math.fabs(l - r) <= EPS:
+        if fabs(l - r) <= EPS:
             print('x =', mid)
             print('cnt =', cnt)
             break
@@ -38,14 +39,14 @@ def newton(y):
     :param y: function expression
     :return:
     """
-    f = sy.lambdify(x, y)
-    d = sy.lambdify(x, sy.diff(y, x))
+    f = lambdify(x, y)
+    d = lambdify(x, diff(y, x))
 
     x0, cnt = 0, 0
     while True:
         cnt += 1
         new_x = x0 - f(x0) / d(x0)
-        if math.fabs(x0 - new_x) <= EPS:
+        if fabs(x0 - new_x) <= EPS:
             print('x =', x0)
             print('cnt =', cnt)
             break
@@ -57,18 +58,18 @@ def newton_downhill(y):
     :param y: function expression
     :return:
     """
-    f = sy.lambdify(x, y)
-    d = sy.lambdify(x, sy.diff(y, x))
+    f = lambdify(x, y)
+    d = lambdify(x, diff(y, x))
 
     x0, cnt = 0, 0
     while True:
         cnt += 1
         k = 1
         new_x = x0 - k * f(x0) / d(x0)
-        while math.fabs(f(new_x)) >= math.fabs(f(x0)):
+        while fabs(f(new_x)) >= fabs(f(x0)):
             k /= 2
             new_x = x0 - k * f(x0) / d(x0)
-        if math.fabs(x0 - new_x) <= EPS:
+        if fabs(x0 - new_x) <= EPS:
             print('x =', x0)
             print('cnt =', cnt)
             break
@@ -80,12 +81,12 @@ def secant(y):
     :param y: function expression
     :return:
     """
-    f = sy.lambdify(x, y)
+    f = lambdify(x, y)
     old_x, x0, cnt = 0, 5, 0
     while True:
         cnt += 1
         new_x = x0 - f(x0) * (x0 - old_x) / (f(x0) - f(old_x))
-        if math.fabs(x0 - new_x) <= EPS:
+        if fabs(x0 - new_x) <= EPS:
             print('x =', x0)
             print('cnt =', cnt)
             break
@@ -94,7 +95,7 @@ def secant(y):
 
 
 def main():
-    y1 = x ** 2 - 3 * x + 2 - sy.exp(x)
+    y1 = x ** 2 - 3 * x + 2 - exp(x)
     y2 = x ** 3 - x - 1
 
     print('Bisection Method')

@@ -6,9 +6,10 @@
 @time: 2018-12-05 20:05:12
 @blog: https://jiahaoplus.com
 """
-import sympy as sy
+from sympy import Symbol, simplify, lambdify
 
-x = sy.Symbol('x')
+
+x = Symbol('x')
 
 
 def lagrange(X, Y):
@@ -27,7 +28,7 @@ def lagrange(X, Y):
                 l *= (x - X[j]) / (X[i] - X[j])
         y += l * Y[i]
 
-    y = sy.simplify(y)
+    y = simplify(y)
     return y
 
 
@@ -58,7 +59,7 @@ def newton(X, Y):
             s *= (x - X[i])
         y += s
 
-    y = sy.simplify(y)
+    y = simplify(y)
     return y
 
 
