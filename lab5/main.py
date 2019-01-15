@@ -7,17 +7,12 @@
 @blog: https://jiahaoplus.com
 """
 import sys
-
-
-sys.path.append('..')
-
-
+import os
+sys.path.append(os.path.dirname(__file__) + '/..')
 from fitting import *
 from lab3.interpolation import *
 from numpy import linspace
 import matplotlib.pyplot as plt
-
-
 
 
 def get_XY():
