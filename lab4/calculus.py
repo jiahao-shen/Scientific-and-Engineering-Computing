@@ -80,10 +80,12 @@ def variable_step_simpson(y, a, b, eps=EPS):
 
 def test():
     y = 1 / (1 + x)
-    # simpson(y, 0, 1)
-    # complex_simpson(y, 0, 1, 10)
-    variable_step_simpson(y, 0, 1)
-    pass
+    # 0.6944444444444443
+    print(simpson(y, 0, 1))
+    # 0.6931473746651161
+    print(complex_simpson(y, 0, 1, 10))
+    # 0.6931476528194189
+    print(variable_step_simpson(y, 0, 1))
 
 
 if __name__ == '__main__':

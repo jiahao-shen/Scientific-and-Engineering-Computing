@@ -64,12 +64,12 @@ def newton(X, Y):
 
 
 def test():
-    pass
-    # X = [-2, -1, 1, 2]
-    # Y = [5, 3, 17, 21]
-    # newton(X, Y)
-
-    # lagrange(X, Y)
+    X = [-2, -1, 1, 2]
+    Y = [5, 3, 17, 21]
+    # -1.0*x**3 + 1.0*x**2 + 8.0*x + 9.0
+    print(newton(X, Y))
+    # -x**3 + x**2 + 8*x + 9
+    print(lagrange(X, Y))
 
 
 if __name__ == '__main__':
