@@ -6,13 +6,13 @@
 @time: 2018-12-23 15:25:13
 @blog: https://jiahaoplus.com
 """
+import matplotlib.pyplot as plt
+from numpy import linspace
+from lab3.interpolation import *
+from fitting import *
 import sys
 import os
 sys.path.append(os.path.dirname(__file__) + '/..')
-from fitting import *
-from lab3.interpolation import *
-from numpy import linspace
-import matplotlib.pyplot as plt
 
 
 def get_XY():
