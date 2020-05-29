@@ -1,7 +1,7 @@
 """
 @project: Scientific-and-Engineering-Computing
 @author: sam
-@file main.py
+@file: main.py
 @ide: PyCharm
 @time: 2018-12-13 10:35:34
 @blog: https://jiahaoplus.com

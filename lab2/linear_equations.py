@@ -1,7 +1,7 @@
 """
 @project: Scientific-and-Engineering-Computing
 @author: sam
-@file linear_equations.py
+@file: linear_equations.py
 @ide: PyCharm
 @time: 2018-12-01 01:41:19
 @blog: https://jiahaoplus.com
@@ -37,6 +37,7 @@ def pivot_gauss(A, b):
         b[k] = (b[k] - dot(A[k, (k + 1):n], b[(k + 1):n])) / A[k, k]
 
     x = b
+    print(A)
     return x
 
 

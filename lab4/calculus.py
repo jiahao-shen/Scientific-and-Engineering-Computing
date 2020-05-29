@@ -1,7 +1,7 @@
 """
 @project: Scientific-and-Engineering-Computing
 @author: sam
-@file calculus.py
+@file: calculus.py
 @ide: PyCharm
 @time: 2018-12-13 10:36:13
 @blog: https://jiahaoplus.com

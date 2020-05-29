@@ -1,7 +1,7 @@
 """
 @project: Scientific-and-Engineering-Computing
 @author: sam
-@file fitting.py
+@file: fitting.py
 @ide: PyCharm
 @time: 2018-12-23 15:30:44
 @blog: https://jiahaoplus.com
